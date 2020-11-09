@@ -94,9 +94,9 @@ Example using it in a webpage:
 
 **Error functions:**
 
-    - `addError(text)`: add `text` to list of errors
-    - `error(text)`: set the sole error to `text`
-    - `clearErrors()`: clear all errors from the display
+- `addError(text)`: add `text` to list of errors
+- `error(text)`: set the sole error to `text`
+- `clearErrors()`: clear all errors from the display
 
 ## Integrating with existing CSS
 
