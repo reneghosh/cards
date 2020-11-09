@@ -90,6 +90,11 @@ Example using it in a webpage:
             - `action(label)`: add an action button with given `label`.
                 - `onclick(fn)`: execution `fn` when the button is activated
 
+- Error functions:
+    - `addError(text)`: add `text` to list of errors
+    - `error(text)`: set the sole error to `text`
+    - `clearErrors()`: clear all errors from the display
+
 ## Integrating with existing CSS
 
 An opiniated framework that doesn't do everything you need yet doesn't integrate with your existing CSS would not be very useful!
