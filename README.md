@@ -57,6 +57,8 @@ Example using it in a webpage:
 ```
 ## Component hierarchy of chainable functions
 
+**Item functions:**
+
 - `card(containerId)`: create a card anchored to HTML element of given id
     - `title(text)`: set the card title to `text`
     - `busy()`: show busy animation to freeze the interface on the entire card while awaiting the result of an async operation
@@ -90,7 +92,8 @@ Example using it in a webpage:
             - `action(label)`: add an action button with given `label`.
                 - `onclick(fn)`: execution `fn` when the button is activated
 
-- Error functions:
+**Error functions:**
+
     - `addError(text)`: add `text` to list of errors
     - `error(text)`: set the sole error to `text`
     - `clearErrors()`: clear all errors from the display
