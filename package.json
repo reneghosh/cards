@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/satelliteray/cards#readme",
   "dependencies": {
-    "nodemon": "^2.0.6"
+    "nodemon": "^2.0.6",
+    "typescript": "^5.8.3"
   }
 }
