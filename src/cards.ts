@@ -9,21 +9,21 @@ import { proxyChainer } from "./proxychainer";
 
 const log = console.log;
 
-export const lookupClass = (className: string): string => {
+export const lookupClass = (...className: string[]): string => {
   let classNameList = [];
   if (cardStyleMapper) {
-    const mappedStyle = cardStyleMapper[className];
+    const mappedStyle = cardStyleMapper[className.join("-")];
     if (mappedStyle) {
       classNameList.push(mappedStyle);
     }
     return classNameList.join(" ");
   }
-  return className;
+  return className.join("-");
 };
 
-let cardStyleMapper;
+let cardStyleMapper: { [key: string]: string };
 
-export const setStyleMapping = (mapper: { [string]: string }) => {
+export const setStyleMapping = (mapper: { [key: string]: string }) => {
   cardStyleMapper = mapper;
 };
 
@@ -43,7 +43,7 @@ const actionDefinition = {
         hide: () => {
           hideElement(actionContainer);
         },
-        onclick: (handler: () => void) => {
+        onclick: (handler: Function) => {
           actionContainer.onclick = (event) => {
             handler();
           };
@@ -99,7 +99,7 @@ const tableDefinition = {
         clearAllRows: () => {
           bodyContainer.innerHTML = "";
         },
-        onSelect: (handler: () => void) => {
+        onSelect: (handler: Function) => {
           selectionHandlers.push(handler);
         },
         show: () => {
@@ -112,7 +112,7 @@ const tableDefinition = {
               i == 0 && i < bodyContainer.childNodes.length;
               i++
             ) {
-              bodyContainer.childNodes[i].focus();
+              (bodyContainer.childNodes[i] as HTMLInputElement).focus();
             }
           }
         },
@@ -250,7 +250,7 @@ const inputDefinitions = {
         setName: (name: string) => {
           inputContainer.setAttribute("name", name);
         },
-        onchange: (handler: () => void) => {
+        onchange: (handler: Function) => {
           inputContainer.onchange = () => {
             handler(inputContainer.value);
           };
@@ -264,7 +264,7 @@ const inputDefinitions = {
         hide: () => {
           hideElement(itemContainer);
         },
-        withValue: (handler: () => void) => {
+        withValue: (handler: Function) => {
           handler(inputContainer.value);
         },
         ...errorMethods,
@@ -272,7 +272,11 @@ const inputDefinitions = {
     },
   },
   select: {
-    build: (container: HTMLElement, values: string[], prompt: string) => {
+    build: (
+      container: HTMLElement,
+      values: { [key: string]: any }[],
+      prompt: string,
+    ) => {
       log(lookupClass("card-item", "card-select-container"));
       const itemContainer = createSubElementWithClass(
         container,
@@ -297,7 +301,7 @@ const inputDefinitions = {
         selectionContainer,
         "select",
         lookupClass("card-selection"),
-      );
+      ) as HTMLSelectElement;
       const optionContainer = createSubElement(selectElement, "option");
       // optionContainer.innerText = prompt;
       for (let value of values) {
@@ -311,7 +315,7 @@ const inputDefinitions = {
         setName: (name: string) => {
           selectElement.setAttribute("name", name);
         },
-        onchange: (handler: () => void) => {
+        onchange: (handler: Function) => {
           selectElement.onchange = () => {
             handler(selectElement.value);
           };
@@ -333,7 +337,7 @@ const inputDefinitions = {
     },
   },
   choices: {
-    build: (container: HTMLElement, values: string[], prompt: string) => {
+    build: (container: HTMLElement, values: any[], prompt: string) => {
       const itemContainer = createSubElementWithClass(
         container,
         "div",
@@ -352,7 +356,7 @@ const inputDefinitions = {
         itemContainer,
         "div",
         lookupClass("card-choices"),
-      );
+      ) as HTMLSelectElement;
       // const fieldSet = createSubElementWithClass(selectContainer, "fieldset", lookupClass("card-choices"));
       let firstContainer: HTMLElement;
       let counter = 0;
@@ -388,7 +392,7 @@ const inputDefinitions = {
         setName: (name: string) => {
           selectContainer.setAttribute("name", name);
         },
-        onchange: (handler: () => void) => {
+        onchange: (handler: Function) => {
           selectContainer.onchange = () => {
             handler(selectContainer.value);
           };
@@ -404,7 +408,7 @@ const inputDefinitions = {
         hide: () => {
           hideElement(itemContainer);
         },
-        withValue: (handler: () => void) => {
+        withValue: (handler: Function) => {
           handler(selectContainer.value);
         },
         ...errorMethods,
@@ -413,12 +417,17 @@ const inputDefinitions = {
   },
 };
 
+interface WithValue {
+  withValue: Function;
+  focus: Function;
+}
+
 const formGroupDefinition = {
   formGroup: {
     build: (container: HTMLElement) => {
       const inputMethods = proxyChainer(inputDefinitions, [container]);
       const proxifiedMethods = {};
-      const keyMap = {};
+      const keyMap: { [key: string]: WithValue } = {};
       for (let [methodName, methodFunction] of Object.entries(inputMethods)) {
         proxifiedMethods[methodName] = (key, ...args) => {
           const input = methodFunction(...args);
@@ -428,7 +437,7 @@ const formGroupDefinition = {
         };
       }
       return {
-        withValueMap: (handler: () => void) => {
+        withValueMap: (handler: Function) => {
           const map = {};
           for (let [key, input] of Object.entries(keyMap)) {
             input.withValue((value) => {

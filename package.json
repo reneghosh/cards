@@ -19,5 +19,8 @@
   "dependencies": {
     "nodemon": "^2.0.6",
     "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1"
   }
 }

@@ -23,22 +23,25 @@ const extractFunctions = (obj) => {
   return functionMap;
 };
 
-export const proxyChainer = (definitions, builderArguments) => {
+export const proxyChainer = (
+  definitions: { [key: string]: any },
+  builderArguments: any[],
+) => {
   checkDefinitions(definitions);
-  const accessor = {};
+  const accessor: { [key: string]: Function } = {};
 
   for (let collection in definitions) {
     //top-level accessor methods create a proxy accessor per definition
-    accessor[collection] = (...otherArgs) => {
+    accessor[collection] = (...otherArgs: any[]) => {
       const collectionNode = definitions[collection].build(
         ...builderArguments,
         ...otherArgs,
       );
-      const proxy = {};
+      const proxy: { [key: string]: Function } = {};
       for (let method in collectionNode) {
-        proxy[method] = (...args) => {
+        proxy[method] = (...args: any[]) => {
           const output = collectionNode[method](...args);
-          if (output != undefined) {
+          if (output) {
             return extractFunctions(output);
           } else {
             return proxy;
