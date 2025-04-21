@@ -1,35 +1,40 @@
 const log = console.log;
 
+interface Makeable {
+  make: Function;
+}
 const chainInterface = () => {
-  const verbs = {};
-  const subVerbs = {};
-  const subBuilders = {};
+  const verbs: { [key: string]: Function } = {};
+  const subVerbs: { [key: string]: Makeable } = {};
+  const subBuilders: { [key: string]: any } = {};
   const chainer = {
-    register: (name, fn) => {
-      verbs[name] = (...fnargs) => {
-        fn(...fnargs);
+    register: (name: string, fn: Function) => {
+      verbs[name] = (...fnargs: any[]) => {
+        if (fn) {
+          fn(...fnargs);
+        }
         return verbs;
       };
       return chainer;
     },
-    subRegister: (name, builder) => {
+    subRegister: (name: string, builder: any) => {
       const subInterface = chainInterface();
-      subInterface.register(name);
+      subInterface.register(name, () => {});
       subVerbs[name] = subInterface;
       subBuilders[name] = builder;
       return subInterface;
     },
     show: () => log(verbs),
-    make: (...args) => {
-      const executableVerbs = {};
+    make: (...args: any[]) => {
+      const executableVerbs: { [key: string]: any } = {};
       for (let verb in verbs) {
-        executableVerbs[verb] = (...verbArgs) => {
+        executableVerbs[verb] = (...verbArgs: any[]) => {
           verbs[verb](...args, ...verbArgs);
           return executableVerbs;
         };
       }
       for (let verb in subVerbs) {
-        executableVerbs[verb] = (...verbArgs) => {
+        executableVerbs[verb] = (...verbArgs: any[]) => {
           return subVerbs[verb].make(
             ...subBuilders[verb](...args),
             ...verbArgs,
@@ -41,28 +46,3 @@ const chainInterface = () => {
   };
   return chainer;
 };
-
-const chainInt = chainInterface();
-chainInt
-  .register("verb1", (counter1, counter2) => {
-    log("verb 1");
-    counter1["count"]++;
-    counter2["count"] += 2;
-  })
-  .register("verb2", (counter1, counter2) => log("verb 2", counter1, counter2))
-  .subRegister("verb3", (counter1, counter2) => [
-    { context1: counter1 },
-    { context2: counter2 },
-  ])
-  .register("verb4", (context1, context2) => log("verb 4", context1, context2))
-  .subRegister("verb5", (context1, context2) => [
-    { context3: context1 },
-    { context4: context2 },
-  ])
-  .register("verb6", (context1, context2) => log("verb 6", context1, context2));
-const chainer = chainInt.make({ count: 0 }, { count: 0 });
-const verb1Res = chainer.verb1("Relish").verb1("Mustard").verb2();
-const v3 = chainer.verb3();
-log(v3);
-v3.verb4();
-v3.verb4().verb5().verb6();

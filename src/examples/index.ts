@@ -1,7 +1,7 @@
 const log = console.log;
 import { card } from "../cards";
 
-const init = (containerId) => {
+const init = (containerId: string) => {
   const mainCard = card(containerId).title("Card Example");
   const loginSection = mainCard.section("Log in");
   const formGroup = loginSection.formGroup();
@@ -11,16 +11,18 @@ const init = (containerId) => {
       [{ save: "Yes" }, { dontSave: "No" }],
       "Save Credentials:",
     )
-    .onchange((value) => log("save credentials set to:", value));
+    .onchange((value: string) => log("save credentials set to:", value));
   formGroup
     .input("login", "text", "Login: ")
-    .onchange((login) => console.log("login value set to:", login));
+    .onchange((login: string) => console.log("login value set to:", login));
   formGroup
     .input("password", "password", "Password: ")
-    .onchange((password) => console.log("password value set to:", password));
+    .onchange((password: string) =>
+      console.log("password value set to:", password),
+    );
   formGroup
     .input("comment", "multiline", "Comment: ")
-    .onchange((comment) => console.log("comment set to:", comment));
+    .onchange((comment: string) => console.log("comment set to:", comment));
   const loginActions = loginSection.actions();
   loginActions
     .action("Cancel")
@@ -31,7 +33,11 @@ const init = (containerId) => {
   });
   loginActions
     .action("Show input map")
-    .onclick(() => formGroup.withValueMap((valueMap) => console.log(valueMap)));
+    .onclick(() =>
+      formGroup.withValueMap((valueMap: { [key: string]: string }) =>
+        console.log(valueMap),
+      ),
+    );
   loginActions.action("Check Section").onclick(() => {
     loginSection.busy();
     setTimeout(() => loginSection.available(), 3000);
@@ -48,7 +54,7 @@ const init = (containerId) => {
   const table = tableSection.table(["Id", "First Name", "Last Name"]);
   table.addRow([1, "K.D.", "Farago"]);
   table.addRow([2, "Emile", "Kossinsky"]);
-  table.onSelect((values) => log(values));
+  table.onSelect((values: any) => log(values));
   tableSection
     .actions()
     .action("clear")
@@ -59,16 +65,7 @@ const init = (containerId) => {
     .onclick(() => table.addRow([1, "K.D.", "Farago"]));
 
   const loggedInSection = mainCard.section().hide();
-  const choices2 = loginSection.choices(
-    [{ 1: "one" }, { 2: "two" }],
-    "This is another select",
-  );
-  const text2 = loggedInSection.text("This is text");
-  const input2 = loggedInSection.input("text", "This is another input");
-  const select2 = loggedInSection.select(
-    [{ 1: "one" }, { 2: "two" }],
-    "This is another select",
-  );
+  loginSection.choices([{ 1: "one" }, { 2: "two" }], "This is another select");
   const lastSection = mainCard.section("Last Section");
   const lastInput = lastSection.choices(
     [{ 1: "one" }, { 2: "two" }],
@@ -77,6 +74,6 @@ const init = (containerId) => {
   lastInput.error("This is an error");
 };
 
-window.addEventListener("load", (e) => {
+window.addEventListener("load", () => {
   init("main");
 });

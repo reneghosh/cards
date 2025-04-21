@@ -1,7 +1,10 @@
 import { lookupClass } from "./cards";
 
 declare const document: Document;
-export const createSubElement = (parentContainer, tagName): HTMLElement => {
+export const createSubElement = (
+  parentContainer: HTMLElement,
+  tagName: string,
+): HTMLElement => {
   const container: HTMLElement = document.createElement(tagName);
   parentContainer.appendChild(container);
   return container;

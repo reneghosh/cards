@@ -1,7 +1,7 @@
 const log = console.log;
 
 //check integrity of definitions
-const checkDefinitions = (definitions) => {
+const checkDefinitions = (definitions: { [key: string]: any }) => {
   for (let collection in definitions) {
     const buildFunction = definitions[collection].build;
     if (buildFunction == undefined || typeof buildFunction != "function") {
@@ -13,8 +13,8 @@ const checkDefinitions = (definitions) => {
   }
 };
 
-const extractFunctions = (obj) => {
-  const functionMap = {};
+const extractFunctions = (obj: any) => {
+  const functionMap: { [key: string]: any } = {};
   for (let [key, value] of Object.entries(obj)) {
     if (typeof value == "function") {
       functionMap[key] = value;

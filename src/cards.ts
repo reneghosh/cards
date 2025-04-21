@@ -8,6 +8,9 @@ import {
 import { proxyChainer } from "./proxychainer";
 
 const log = console.log;
+interface Hideable {
+  hide: Function;
+}
 
 export const lookupClass = (...className: string[]): string => {
   let classNameList = [];
@@ -44,7 +47,7 @@ const actionDefinition = {
           hideElement(actionContainer);
         },
         onclick: (handler: Function) => {
-          actionContainer.onclick = (event) => {
+          actionContainer.onclick = () => {
             handler();
           };
         },
@@ -252,7 +255,7 @@ const inputDefinitions = {
         },
         onchange: (handler: Function) => {
           inputContainer.onchange = () => {
-            handler(inputContainer.value);
+            handler((inputContainer as HTMLInputElement).value);
           };
         },
         focus: () => {
@@ -265,7 +268,7 @@ const inputDefinitions = {
           hideElement(itemContainer);
         },
         withValue: (handler: Function) => {
-          handler(inputContainer.value);
+          handler((inputContainer as HTMLInputElement).value);
         },
         ...errorMethods,
       };
@@ -302,7 +305,7 @@ const inputDefinitions = {
         "select",
         lookupClass("card-selection"),
       ) as HTMLSelectElement;
-      const optionContainer = createSubElement(selectElement, "option");
+      createSubElement(selectElement, "option");
       // optionContainer.innerText = prompt;
       for (let value of values) {
         for (let key in value) {
@@ -329,7 +332,7 @@ const inputDefinitions = {
         hide: () => {
           hideElement(itemContainer);
         },
-        withValue: (handler) => {
+        withValue: (handler: Function) => {
           handler(selectElement.value);
         },
         ...errorMethods,
@@ -426,10 +429,10 @@ const formGroupDefinition = {
   formGroup: {
     build: (container: HTMLElement) => {
       const inputMethods = proxyChainer(inputDefinitions, [container]);
-      const proxifiedMethods = {};
+      const proxifiedMethods: { [key: string]: any } = {};
       const keyMap: { [key: string]: WithValue } = {};
       for (let [methodName, methodFunction] of Object.entries(inputMethods)) {
-        proxifiedMethods[methodName] = (key, ...args) => {
+        proxifiedMethods[methodName] = (key: string, ...args: any[]) => {
           const input = methodFunction(...args);
           input.setName(key);
           keyMap[key] = input;
@@ -438,15 +441,15 @@ const formGroupDefinition = {
       }
       return {
         withValueMap: (handler: Function) => {
-          const map = {};
+          const map: { [key: string]: any } = {};
           for (let [key, input] of Object.entries(keyMap)) {
-            input.withValue((value) => {
+            input.withValue((value: any) => {
               map[key] = value;
             });
           }
           handler(map);
         },
-        focus: (key) => {
+        focus: (key: string) => {
           const elementToFocus = keyMap[key];
           if (elementToFocus != undefined) {
             elementToFocus.focus();
@@ -518,7 +521,7 @@ const sectionDefinition = {
 
 const cardDefinition = {
   card: {
-    build: (container) => {
+    build: (container: any) => {
       const cardContainer = createSubElementWithClass(
         container,
         "div",
@@ -539,13 +542,13 @@ const cardDefinition = {
         "h1",
         lookupClass("card-title"),
       );
-      const sections = [];
+      const sections: Hideable[] = [];
       const errorMethods = proxyChainer(errorsDefinition, [
         bodyContainer,
       ]).errors();
       const sectionMethods = proxyChainer(sectionDefinition, [bodyContainer]);
       const unProxifiedNewSection = sectionMethods.section;
-      sectionMethods.section = (...args) => {
+      sectionMethods.section = (...args: any[]) => {
         const newSection = unProxifiedNewSection(...args);
         sections.push(newSection);
         return newSection;

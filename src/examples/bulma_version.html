@@ -1,48 +1,48 @@
 <!doctype html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.css"
+    />
+    <script src="index.ts" type="module"></script>
+    <script type="module">
+      import { setStyleMapping } from "../cards";
+      setStyleMapping({
+        card: "card",
+        "card-header": "",
+        "card-body": "card-content",
+        "card-title": "title",
+        "card-subtitle": "subtitle is-2",
+        "card-sections": "is-flex-direction-column",
+        "card-errors": "",
+        "card-error": "",
+        "card-section": "box container",
+        "card-section-header": "",
+        "card-section-header-title": "subtitle",
+        "card-table": "table is-align-content-space-between",
+        "card-table-row": "",
+        "card-text": "",
+        "card-input": "input",
+        "card-item": "is-flex is-flex-direction-column",
+        "card-hidden": "is-hidden",
+        "card-shown": "is-flex-direction-column",
+        "card-prompt": "",
+        "card-select-container": "select",
+        "card-selection": "",
+        "card-choices": "is-flex is-flex-row m-1",
+        "card-choice": "m-2",
+        "card-input-checkbox": "checkbox",
+        "card-choice-label": "m-1",
+        "card-action-list": "p-1",
+        "card-button": "button is-dark m-1",
+      });
+    </script>
+  </head>
 
-    <head>
-        <meta charset="utf-8">
-        <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.css">
-        <script src="index.js" type="module"></script>
-        <script type="module">
-            import { setStyleMapping } from "../cards.js";
-            setStyleMapping({
-                "card": "card",
-                "card-header": "",
-                "card-body": "card-content",
-                "card-title": "title",
-                "card-subtitle": "subtitle is-2",
-                "card-sections": "is-flex-direction-column",
-                "card-errors": "",
-                "card-error": "",
-                "card-section": "box container",
-                "card-section-header": "",
-                "card-section-header-title": "subtitle",
-                "card-table": "table is-align-content-space-between",
-                "card-table-row": "",
-                "card-text": "",
-                "card-input": "input",
-                "card-item": "is-flex is-flex-direction-column",
-                "card-hidden": "is-hidden",
-                "card-shown": "is-flex-direction-column",
-                "card-prompt": "",
-                "card-select-container": "select",
-                "card-selection": "",
-                "card-choices": "is-flex is-flex-row m-1",
-                "card-choice": "m-2",
-                "card-input-checkbox": "checkbox",
-                "card-choice-label": "m-1",
-                "card-action-list": "p-1",
-                "card-button": "button is-dark m-1",
-            });
-        </script>
-    </head>
-
-    <body>
-        <div id="main" style="max-width: 35em;">
-        </div>
-    </body>
-
+  <body>
+    <div id="main" style="max-width: 35em"></div>
+  </body>
 </html>
