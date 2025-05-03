@@ -60,9 +60,9 @@ const init = (containerId: string) => {
     .onClick(() => table.addRow([1, "K.D.", "Farago"]));
 
   const loggedInSection = mainCard.section().hide();
-  loginSection.choices([{ 1: "one" }, { 2: "two" }], "This is another select");
+  loginSection.choice([{ 1: "one" }, { 2: "two" }], "This is another select");
   const lastSection = mainCard.section("Last Section");
-  const lastInput = lastSection.choices(
+  const lastInput = lastSection.choice(
     [{ 1: "one" }, { 2: "two" }],
     "Input text",
   );

@@ -134,3 +134,6 @@ export interface ActionFunction {
 export interface TableFunction {
   (headers: string[]): Table;
 }
+export interface ChoiceFunction {
+  (values: string[], prompt: string): Choice;
+}

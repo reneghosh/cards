@@ -527,6 +527,9 @@ export const buildSection = (
     table: (headers: string[]) => {
       return buildTable(container, headers);
     },
+    choice: (values: string[], prompt: string) => {
+      return buildChoices(container, values, prompt);
+    },
     formGroup: () => {
       return buildFormGroup(sectionContainer);
     },
