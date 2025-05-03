@@ -187,7 +187,7 @@ export const buildText = (
   return text;
 };
 
-export const buildError = (container: HTMLElement): Errors => {
+export const buildError = (container: HTMLElement) => {
   const errorContainer = createSubElementWithClass(
     container,
     "div",

@@ -7,7 +7,7 @@ export interface FormGroup {
   select: SelectFunction;
   input: InputFunction;
 }
-export interface Section extends Errors {
+export interface Section extends Errors<Section> {
   show: ShowFunction<Section>;
   hide: HideFunction<Section>;
   busy: BusyFunction<Section>;
@@ -15,6 +15,7 @@ export interface Section extends Errors {
   formGroup: FormGroupFunction;
   action: ActionFunction;
   table: TableFunction;
+  error: ErrorFunction<Section>;
 }
 
 export interface Action {
@@ -45,7 +46,7 @@ export interface Input extends Errors<Input> {
   hide: HideFunction<Input>;
   withValue: WithValueFunction<Input>;
   setName: SetNameFunction<Input>;
-  onChange: OnChangeFunction<Input>;
+  onChange: OnChangeFunction;
 }
 export interface Select extends Errors<Select> {
   setName: SetNameFunction<Select>;
@@ -57,10 +58,18 @@ export interface Select extends Errors<Select> {
 }
 export interface Card extends ShowHideable<Card>, Busyable<Card> {
   title: TitleFunction<Card>;
+  hideAllSections: HideAllSectionsFunction<Card>;
+  showAllSections: ShowAllSectionsFunction<Card>;
   section: MakeSectionFunction;
 }
 export interface FormGroupFunction {
   (): FormGroup;
+}
+export interface HideAllSectionsFunction<Type> {
+  (): Type;
+}
+export interface ShowAllSectionsFunction<Type> {
+  (): Type;
 }
 export interface InputFunction {
   (key: string, type: string, prompt: string): Input;
