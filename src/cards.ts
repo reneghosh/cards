@@ -503,7 +503,6 @@ export const buildSection = (
     );
     sectionHeaderTitleContainer.innerText = title;
   }
-  const allActions = [];
   const busyLoaderContainer = createBusyLoader(sectionContainer);
   const section = {
     busy: () => {
@@ -523,12 +522,10 @@ export const buildSection = (
       return section;
     },
     action: (text: string) => {
-      const anAction = buildAction(container, text);
-      allActions.push(anAction);
-      return anAction;
+      return buildAction(container, text);
     },
-    actions: () => {
-      return allActions;
+    table: (headers: string[]) => {
+      return buildTable(container, headers);
     },
     formGroup: () => {
       return buildFormGroup(sectionContainer);

@@ -23,46 +23,41 @@ const init = (containerId: string) => {
   formGroup
     .input("comment", "multiline", "Comment: ")
     .onChange((comment: string) => console.log("comment set to:", comment));
-  const loginActions = loginSection.actions();
-  loginActions
+  loginSection
     .action("Cancel")
-    .onclick(() => loginSection.error("You don't seem to want to log in"));
-  loginActions.action("Submit").onclick(() => {
+    .onClick(() => loginSection.error("You don't seem to want to log in"));
+  loginSection.action("Submit").onClick(() => {
     mainCard.busy();
     setTimeout(() => mainCard.available(), 3000);
   });
-  loginActions
+  loginSection
     .action("Show input map")
-    .onclick(() =>
+    .onClick(() =>
       formGroup.withValueMap((valueMap: { [key: string]: string }) =>
         console.log(valueMap),
       ),
     );
-  loginActions.action("Check Section").onclick(() => {
+  loginSection.action("Check Section").onClick(() => {
     loginSection.busy();
     setTimeout(() => loginSection.available(), 3000);
   });
-  loginActions.action("show hidden section").onclick(() => {
+  loginSection.action("show hidden section").onClick(() => {
     loggedInSection.show();
     formGroup.focus("password");
   });
-  loginActions
+  loginSection
     .action("hide all sections")
-    .onclick(() => mainCard.hideAllSections());
+    .onClick(() => mainCard.hideAllSections());
 
   const tableSection = mainCard.section("Table example");
   const table = tableSection.table(["Id", "First Name", "Last Name"]);
   table.addRow([1, "K.D.", "Farago"]);
   table.addRow([2, "Emile", "Kossinsky"]);
   table.onSelect((values: any) => log(values));
+  tableSection.action("clear").onClick(() => table.clearAllRows());
   tableSection
-    .actions()
-    .action("clear")
-    .onclick(() => table.clearAllRows());
-  tableSection
-    .actions()
     .action("add row")
-    .onclick(() => table.addRow([1, "K.D.", "Farago"]));
+    .onClick(() => table.addRow([1, "K.D.", "Farago"]));
 
   const loggedInSection = mainCard.section().hide();
   loginSection.choices([{ 1: "one" }, { 2: "two" }], "This is another select");

@@ -7,9 +7,6 @@ export interface InputFunction {
 export interface SelectFunction {
   (values: { [key: string]: any }[], prompt: string): Select;
 }
-export interface ActionsFunction {
-  (): Action[];
-}
 export interface FormGroup {
   withValueMap: WithValueMapFunction<FormGroup>;
   focus: FocusToKeyFunction<FormGroup>;
@@ -22,8 +19,10 @@ export interface Section {
   busy: BusyFunction<Section>;
   available: AvailableFunction<Section>;
   formGroup: FormGroupFunction;
-  actions: ActionsFunction;
+  action: ActionFunction;
+  table: TableFunction;
 }
+
 export interface Action {
   show: ShowFunction<Action>;
   hide: HideFunction<Action>;
@@ -128,4 +127,10 @@ export interface SetNameFunction<Type> {
 }
 export interface MakeSectionFunction {
   (title: string): Section;
+}
+export interface ActionFunction {
+  (title: string): Action;
+}
+export interface TableFunction {
+  (headers: string[]): Table;
 }
