@@ -453,17 +453,8 @@ export const buildChoices = (
 };
 
 export const buildFormGroup = (container: HTMLElement): FormGroup => {
+  const keyMap = {};
   const formGroup = {
-    withValueMap: (handler: Function) => {
-      const map: { [key: string]: any } = {};
-      for (let [key, input] of Object.entries(keyMap)) {
-        input.withValue((value: any) => {
-          map[key] = value;
-        });
-      }
-      handler(map);
-      return formGroup;
-    },
     focus: (key: string) => {
       const elementToFocus = keyMap[key];
       if (elementToFocus) {
@@ -471,11 +462,15 @@ export const buildFormGroup = (container: HTMLElement): FormGroup => {
       }
       return formGroup;
     },
-    select: (values: { [key: string]: any }[], prompt: string) => {
-      return buildSelect(container, values, prompt);
+    select: (key: string, values: { [key: string]: any }[], prompt: string) => {
+      const aSelect = buildSelect(container, values, prompt);
+      Object.assign(keyMap, { [key]: aSelect });
+      return aSelect;
     },
-    input: (type: string, prompt: string) => {
-      return buildInput(container, type, prompt);
+    input: (key: string, type: string, prompt: string) => {
+      const anInput = buildInput(container, type, prompt);
+      Object.assign(keyMap, { [key]: anInput });
+      return anInput;
     },
   };
   return formGroup;
