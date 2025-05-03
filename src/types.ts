@@ -39,14 +39,15 @@ export interface Text {
   hide: HideFunction<Text>;
   setText: SetTextFunction<Text>;
 }
-export interface Input extends Errors {
+export interface Input extends Errors<Input> {
   focus: FocusFunction<Input>;
   show: ShowFunction<Input>;
   hide: HideFunction<Input>;
   withValue: WithValueFunction<Input>;
   setName: SetNameFunction<Input>;
+  onChange: OnChangeFunction<Input>;
 }
-export interface Select extends Errors {
+export interface Select extends Errors<Select> {
   setName: SetNameFunction<Select>;
   show: ShowFunction<Select>;
   hide: HideFunction<Select>;
@@ -54,7 +55,7 @@ export interface Select extends Errors {
   withValue: WithValueFunction<Select>;
   onChange: OnChangeFunction;
 }
-export interface Card {
+export interface Card extends ShowHideable<Card>, Busyable<Card> {
   title: TitleFunction<Card>;
   section: MakeSectionFunction;
 }
@@ -62,7 +63,7 @@ export interface FormGroupFunction {
   (): FormGroup;
 }
 export interface InputFunction {
-  (key: string, title: string, type: string, prompt: string): Input;
+  (key: string, type: string, prompt: string): Input;
 }
 export interface SelectFunction {
   (key: string, values: { [key: string]: any }[], prompt: string): Select;
@@ -91,6 +92,10 @@ export interface FocusToKeyFunction<Type> {
 export interface ShowHideable<Type> {
   show: ShowFunction<Type>;
   hide: HideFunction<Type>;
+}
+export interface Busyable<Type> {
+  busy: BusyFunction<Type>;
+  available: AvailableFunction<Type>;
 }
 export interface OnClickFunction {
   (handler: Function): void;

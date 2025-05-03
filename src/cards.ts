@@ -269,9 +269,9 @@ export const buildInput = (
       return input;
     },
     onChange: (handler: Function) => {
-      inputContainer.onchange = () => {
+      inputContainer.addEventListener("keyup", () => {
         handler((inputContainer as HTMLInputElement).value);
-      };
+      });
     },
     focus: () => {
       inputContainer.focus();
@@ -336,9 +336,9 @@ export const buildSelect = (
       return select;
     },
     onChange: (handler: Function) => {
-      selectElement.onchange = () => {
+      selectElement.addEventListener("change", () => {
         handler(selectElement.value);
-      };
+      });
     },
     focus: () => {
       selectElement.focus();
@@ -454,7 +454,11 @@ export const buildChoices = (
 
 export const buildFormGroup = (container: HTMLElement): FormGroup => {
   const keyMap = {};
+  const valuesMap = {};
   const formGroup = {
+    withValueMap: (handler: Function) => {
+      handler(valuesMap);
+    },
     focus: (key: string) => {
       const elementToFocus = keyMap[key];
       if (elementToFocus) {
@@ -465,11 +469,17 @@ export const buildFormGroup = (container: HTMLElement): FormGroup => {
     select: (key: string, values: { [key: string]: any }[], prompt: string) => {
       const aSelect = buildSelect(container, values, prompt);
       Object.assign(keyMap, { [key]: aSelect });
+      aSelect.onChange((value: string) => {
+        Object.assign(valuesMap, { [key]: value });
+      });
       return aSelect;
     },
     input: (key: string, type: string, prompt: string) => {
       const anInput = buildInput(container, type, prompt);
       Object.assign(keyMap, { [key]: anInput });
+      anInput.onChange((value: string) => {
+        Object.assign(valuesMap, { [key]: value });
+      });
       return anInput;
     },
   };
@@ -547,6 +557,16 @@ export const buildSection = (
   };
   return section;
 };
+const makeBusyOrAvailable = (container: HTMLElement) => ({
+  busy: () => {
+    container.style.display = "flex";
+    return card;
+  },
+  available: () => {
+    container.style.display = "none";
+    return card;
+  },
+});
 export const buildCard = (containerId: any): Card => {
   const container = document.getElementById(containerId);
   if (!container) {
@@ -574,13 +594,6 @@ export const buildCard = (containerId: any): Card => {
   );
   const sections: ShowHideable<Section>[] = [];
   const errorMethods = buildError(container);
-  // const sectionMethods = buildSection(container, );
-  // const unProxifiedNewSection = sectionMethods.section;
-  // sectionMethods.section = (...args: any[]) => {
-  //   const newSection = unProxifiedNewSection(...args);
-  //   sections.push(newSection);
-  //   return newSection;
-  // };
   hideElement(headerContainer);
   hideElement(titleContainer);
   const busyLoaderContainer = createBusyLoader(cardContainer);
@@ -598,14 +611,7 @@ export const buildCard = (containerId: any): Card => {
       }
       return card;
     },
-    busy: () => {
-      busyLoaderContainer.style.display = "flex";
-      return card;
-    },
-    available: () => {
-      busyLoaderContainer.style.display = "none";
-      return card;
-    },
+    ...makeBusyOrAvailable(busyLoaderContainer),
     section: (title: string) => {
       const aSection = buildSection(bodyContainer, title);
       return aSection;
