@@ -1,11 +1,5 @@
-export interface FormGroupFunction {
-  (): FormGroup;
-}
-export interface InputFunction {
-  (title: string, type: string, prompt: string): Input;
-}
-export interface SelectFunction {
-  (values: { [key: string]: any }[], prompt: string): Select;
+export interface Errors<Type> {
+  error: ErrorFunction<Type>;
 }
 export interface FormGroup {
   withValueMap: WithValueMapFunction<FormGroup>;
@@ -13,7 +7,7 @@ export interface FormGroup {
   select: SelectFunction;
   input: InputFunction;
 }
-export interface Section {
+export interface Section extends Errors {
   show: ShowFunction<Section>;
   hide: HideFunction<Section>;
   busy: BusyFunction<Section>;
@@ -45,14 +39,14 @@ export interface Text {
   hide: HideFunction<Text>;
   setText: SetTextFunction<Text>;
 }
-export interface Input {
+export interface Input extends Errors {
   focus: FocusFunction<Input>;
   show: ShowFunction<Input>;
   hide: HideFunction<Input>;
   withValue: WithValueFunction<Input>;
   setName: SetNameFunction<Input>;
 }
-export interface Select extends Error {
+export interface Select extends Errors {
   setName: SetNameFunction<Select>;
   show: ShowFunction<Select>;
   hide: HideFunction<Select>;
@@ -63,6 +57,15 @@ export interface Select extends Error {
 export interface Card {
   title: TitleFunction<Card>;
   section: MakeSectionFunction;
+}
+export interface FormGroupFunction {
+  (): FormGroup;
+}
+export interface InputFunction {
+  (key: string, title: string, type: string, prompt: string): Input;
+}
+export interface SelectFunction {
+  (key: string, values: { [key: string]: any }[], prompt: string): Select;
 }
 export interface TitleFunction<Type> {
   (title: string): Type;
@@ -135,5 +138,5 @@ export interface TableFunction {
   (headers: string[]): Table;
 }
 export interface ChoiceFunction {
-  (values: string[], prompt: string): Choice;
+  (key: string, values: string[], prompt: string): Choice;
 }

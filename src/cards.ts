@@ -9,7 +9,7 @@ import {
   Action,
   ActionsList,
   Card,
-  Error,
+  Errors,
   FocusFunction,
   FormGroup,
   HideFunction,
@@ -187,7 +187,7 @@ export const buildText = (
   return text;
 };
 
-export const buildError = (container: HTMLElement): Error => {
+export const buildError = (container: HTMLElement): Errors => {
   const errorContainer = createSubElementWithClass(
     container,
     "div",
@@ -480,6 +480,11 @@ export const buildSection = (
   container: HTMLElement,
   title: string,
 ): Section => {
+  const errorContainer = createSubElementWithClass(
+    container,
+    "div",
+    lookupClass("card-errors"),
+  );
   const sectionContainer = createSubElementWithClass(
     container,
     "div",
@@ -490,6 +495,11 @@ export const buildSection = (
     "h3",
     lookupClass("card-section-header"),
   );
+  const actionsContainer = createSubElementWithClass(
+    container,
+    "div",
+    lookupClass("card-actions"),
+  );
   if (title) {
     const sectionHeaderTitleContainer = createSubElementWithClass(
       sectionHeaderContainer,
@@ -498,6 +508,7 @@ export const buildSection = (
     );
     sectionHeaderTitleContainer.innerText = title;
   }
+  const errors: Errors[] = [];
   const busyLoaderContainer = createBusyLoader(sectionContainer);
   const section = {
     busy: () => {
@@ -517,7 +528,12 @@ export const buildSection = (
       return section;
     },
     action: (text: string) => {
-      return buildAction(container, text);
+      return buildAction(actionsContainer, text);
+    },
+    error: (text: string) => {
+      const anError = buildError(errorContainer);
+      errors.push(anError);
+      return anError;
     },
     table: (headers: string[]) => {
       return buildTable(container, headers);
@@ -528,12 +544,6 @@ export const buildSection = (
     formGroup: () => {
       return buildFormGroup(sectionContainer);
     },
-    // ...inputMethods,
-    // ...tableMethods,
-    // ...actionListMethods,
-    // ...formGroupMethods,
-    // ...errorMethods,
-    // ...textMethods,
   };
   return section;
 };
