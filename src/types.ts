@@ -1,0 +1,131 @@
+export interface FormGroupFunction {
+  (): FormGroup;
+}
+export interface InputFunction {
+  (title: string, type: string, prompt: string): Input;
+}
+export interface SelectFunction {
+  (values: { [key: string]: any }[], prompt: string): Select;
+}
+export interface ActionsFunction {
+  (): Action[];
+}
+export interface FormGroup {
+  withValueMap: WithValueMapFunction<FormGroup>;
+  focus: FocusToKeyFunction<FormGroup>;
+  select: SelectFunction;
+  input: InputFunction;
+}
+export interface Section {
+  show: ShowFunction<Section>;
+  hide: HideFunction<Section>;
+  busy: BusyFunction<Section>;
+  available: AvailableFunction<Section>;
+  formGroup: FormGroupFunction;
+  actions: ActionsFunction;
+}
+export interface Action {
+  show: ShowFunction<Action>;
+  hide: HideFunction<Action>;
+  onClick: OnClickFunction;
+}
+export interface Table {
+  show: ShowFunction<Table>;
+  hide: HideFunction<Table>;
+  focus: FocusFunction<Table>;
+  addRow: AddRowFunction<Table>;
+  onSelect: OnSelectFunction;
+  clearAllRows: ClearAllRowsFunction<Table>;
+}
+export interface ActionsList {
+  show: ShowFunction<ActionsList>;
+  hide: HideFunction<ActionsList>;
+}
+export interface Text {
+  show: ShowFunction<Text>;
+  hide: HideFunction<Text>;
+  setText: SetTextFunction<Text>;
+}
+export interface Input {
+  focus: FocusFunction<Input>;
+  show: ShowFunction<Input>;
+  hide: HideFunction<Input>;
+  withValue: WithValueFunction<Input>;
+  setName: SetNameFunction<Input>;
+}
+export interface Select extends Error {
+  setName: SetNameFunction<Select>;
+  show: ShowFunction<Select>;
+  hide: HideFunction<Select>;
+  focus: FocusFunction<Select>;
+  withValue: WithValueFunction<Select>;
+  onChange: OnChangeFunction;
+}
+export interface Card {
+  title: TitleFunction<Card>;
+  section: MakeSectionFunction;
+}
+export interface TitleFunction<Type> {
+  (title: string): Type;
+}
+export interface ShowFunction<Type> {
+  (): Type;
+}
+export interface HideFunction<Type> {
+  (): Type;
+}
+export interface BusyFunction<Type> {
+  (): Type;
+}
+export interface AvailableFunction<Type> {
+  (): Type;
+}
+export interface FocusFunction<Type> {
+  (): Type;
+}
+export interface FocusToKeyFunction<Type> {
+  (key: string): Type;
+}
+export interface ShowHideable<Type> {
+  show: ShowFunction<Type>;
+  hide: HideFunction<Type>;
+}
+export interface OnClickFunction {
+  (handler: Function): void;
+}
+export interface OnSelectFunction {
+  (handler: Function): void;
+}
+export interface OnChangeFunction {
+  (handler: Function): void;
+}
+export interface AddRowFunction<Type> {
+  (values: string[]): Type;
+}
+export interface ClearAllRowsFunction<Type> {
+  (): Type;
+}
+export interface SetTextFunction<Type> {
+  (text: string): Type;
+}
+export interface AddErrorFunction<Type> {
+  (error: string): Type;
+}
+export interface ErrorFunction<Type> {
+  (error: string): Type;
+}
+export interface ClearErrorsFunction<Type> {
+  (): Type;
+}
+export interface WithValueFunction<Type> {
+  (handler: Function): Type;
+}
+export interface WithValueMapFunction<Type> {
+  (handler: Function): Type;
+}
+export interface SetNameFunction<Type> {
+  (name: string): Type;
+}
+export interface MakeSectionFunction {
+  (title: string): Section;
+}

@@ -5,12 +5,23 @@ import {
   showElement,
   createBusyLoader,
 } from "./domhelpers";
-import { proxyChainer } from "./proxychainer";
-
-const log = console.log;
-interface Hideable {
-  hide: Function;
-}
+import {
+  Action,
+  ActionsList,
+  Card,
+  Error,
+  FocusFunction,
+  FormGroup,
+  HideFunction,
+  Input,
+  Section,
+  Select,
+  SetNameFunction,
+  ShowFunction,
+  ShowHideable,
+  Table,
+  WithValueFunction,
+} from "./types";
 
 export const lookupClass = (...className: string[]): string => {
   let classNameList = [];
@@ -30,562 +41,580 @@ export const setStyleMapping = (mapper: { [key: string]: string }) => {
   cardStyleMapper = mapper;
 };
 
-const actionDefinition = {
-  action: {
-    build: (container: HTMLElement, text: string) => {
-      const actionContainer = createSubElementWithClass(
-        container,
-        "button",
-        lookupClass("card-button"),
-      );
-      actionContainer.innerText = text;
-      return {
-        show: () => {
-          showElement(actionContainer);
-        },
-        hide: () => {
-          hideElement(actionContainer);
-        },
-        onclick: (handler: Function) => {
-          actionContainer.onclick = () => {
-            handler();
-          };
-        },
+export const buildAction = (container: HTMLElement, text: string): Action => {
+  const actionContainer = createSubElementWithClass(
+    container,
+    "button",
+    lookupClass("card-button"),
+  );
+  actionContainer.innerText = text;
+  const action: Action = {
+    show: () => {
+      showElement(actionContainer);
+      return action;
+    },
+    hide: () => {
+      hideElement(actionContainer);
+      return action;
+    },
+    onClick: (handler: Function) => {
+      actionContainer.onclick = () => {
+        handler();
       };
     },
-  },
+  };
+  return action;
 };
 
-const tableDefinition = {
-  table: {
-    build: (container: HTMLElement, headers: string[]) => {
-      const tableContainer = createSubElementWithClass(
-        container,
-        "table",
-        lookupClass("card-table"),
+export const buildTable = (
+  container: HTMLElement,
+  headers: string[],
+): Table => {
+  const tableContainer = createSubElementWithClass(
+    container,
+    "table",
+    lookupClass("card-table"),
+  );
+  const headerContainer = createSubElement(tableContainer, "thead");
+  const bodyContainer = createSubElement(tableContainer, "tbody");
+  const headerRowContainer = createSubElement(headerContainer, "tr");
+  const selectionHandlers: Function[] = [];
+  if (headers) {
+    for (const header of headers) {
+      const headerContainer = createSubElement(headerRowContainer, "th");
+      headerContainer.innerText = header;
+    }
+  }
+  const table = {
+    addRow: (values: string[]) => {
+      const rowContainer = createSubElementWithClass(
+        bodyContainer,
+        "tr",
+        lookupClass("card-table-row"),
       );
-      const headerContainer = createSubElement(tableContainer, "thead");
-      const bodyContainer = createSubElement(tableContainer, "tbody");
-      const headerRowContainer = createSubElement(headerContainer, "tr");
-      const selectionHandlers: Function[] = [];
-      if (headers != undefined) {
-        for (const header of headers) {
-          const headerContainer = createSubElement(headerRowContainer, "th");
-          headerContainer.innerText = header;
+      rowContainer.setAttribute("tabindex", "1");
+      for (let value of values) {
+        const valueContainer = createSubElement(rowContainer, "td");
+        valueContainer.innerText = value;
+      }
+      rowContainer.onclick = () => {
+        for (let handler of selectionHandlers) {
+          handler(values);
+        }
+      };
+      rowContainer.onkeypress = (event) => {
+        if (event.code == "Enter") {
+          for (let handler of selectionHandlers) {
+            handler(values);
+          }
+        }
+      };
+      return table;
+    },
+    clearAllRows: () => {
+      bodyContainer.innerHTML = "";
+      return table;
+    },
+    onSelect: (handler: Function) => {
+      selectionHandlers.push(handler);
+      return table;
+    },
+    show: () => {
+      showElement(tableContainer);
+      return table;
+    },
+    focus: () => {
+      if (bodyContainer) {
+        for (let i = 0; i == 0 && i < bodyContainer.childNodes.length; i++) {
+          (bodyContainer.childNodes[i] as HTMLInputElement).focus();
         }
       }
-      return {
-        addRow: (values: string[]) => {
-          const rowContainer = createSubElementWithClass(
-            bodyContainer,
-            "tr",
-            lookupClass("card-table-row"),
-          );
-          rowContainer.setAttribute("tabindex", "1");
-          for (let value of values) {
-            const valueContainer = createSubElement(rowContainer, "td");
-            valueContainer.innerText = value;
-          }
-          rowContainer.onclick = () => {
-            for (let handler of selectionHandlers) {
-              handler(values);
-            }
-          };
-          rowContainer.onkeypress = (event) => {
-            if (event.code == "Enter") {
-              for (let handler of selectionHandlers) {
-                handler(values);
-              }
-            }
-          };
-        },
-        clearAllRows: () => {
-          bodyContainer.innerHTML = "";
-        },
-        onSelect: (handler: Function) => {
-          selectionHandlers.push(handler);
-        },
-        show: () => {
-          showElement(tableContainer);
-        },
-        focus: () => {
-          if (bodyContainer) {
-            for (
-              let i = 0;
-              i == 0 && i < bodyContainer.childNodes.length;
-              i++
-            ) {
-              (bodyContainer.childNodes[i] as HTMLInputElement).focus();
-            }
-          }
-        },
-        hide: () => {
-          hideElement(tableContainer);
-        },
-      };
+      return table;
     },
-  },
+    hide: () => {
+      hideElement(tableContainer);
+      return table;
+    },
+  };
+  return table;
 };
 
-const actionListDefinition = {
-  actions: {
-    build: (container: HTMLElement) => {
-      const actionListContainer = createSubElementWithClass(
-        container,
-        "div",
-        lookupClass("card-action-list"),
-      );
-      const actionMethods = proxyChainer(actionDefinition, [
-        actionListContainer,
-      ]);
-      return {
-        show: () => {
-          showElement(actionListContainer);
-        },
-        hide: () => {
-          hideElement(actionListContainer);
-        },
-        ...actionMethods,
-      };
+export const buildActionsList = (container: HTMLElement): ActionsList => {
+  const actionListContainer = createSubElementWithClass(
+    container,
+    "div",
+    lookupClass("card-action-list"),
+  );
+  // const action = buildAction(container);
+  const actionsList = {
+    // ...action,
+    show: () => {
+      showElement(actionListContainer);
+      return actionsList;
     },
-  },
+    hide: () => {
+      hideElement(actionListContainer);
+      return actionsList;
+    },
+  };
+  return actionsList;
 };
 
-const textDefinition = {
-  text: {
-    build: (container: HTMLElement, text: string) => {
-      const textContainer = createSubElementWithClass(
-        container,
-        "div",
-        lookupClass("card-text"),
-      );
+export const buildText = (
+  container: HTMLElement,
+  textMessage: string,
+): Text => {
+  const textContainer = createSubElementWithClass(
+    container,
+    "div",
+    lookupClass("card-text"),
+  );
+  textContainer.innerText = textMessage;
+  const text: Text = {
+    show: () => {
+      showElement(textContainer);
+      return text;
+    },
+    setText: (text: string) => {
       textContainer.innerText = text;
-      return {
-        show: () => {
-          showElement(textContainer);
-        },
-        setText: (text: string) => {
-          textContainer.innerText = text;
-        },
-        hide: () => {
-          hideElement(textContainer);
-        },
-      };
+      return text;
     },
-  },
+    hide: () => {
+      hideElement(textContainer);
+      return text;
+    },
+  };
+  return text;
 };
-const errorsDefinition = {
-  errors: {
-    build: (container: HTMLElement) => {
-      const errorContainer = createSubElementWithClass(
-        container,
-        "div",
-        lookupClass("card-errors"),
-      );
-      var hidden = true;
+
+export const buildError = (container: HTMLElement): Error => {
+  const errorContainer = createSubElementWithClass(
+    container,
+    "div",
+    lookupClass("card-errors"),
+  );
+  var hidden = true;
+  hideElement(errorContainer);
+  var errors = [];
+  const renderError = (errorText: string) => {
+    const errorMessageElement: HTMLElement = createSubElementWithClass(
+      errorContainer,
+      "div",
+      lookupClass("card-error"),
+    );
+    errorMessageElement.innerText = errorText;
+    if (hidden) {
+      hidden = false;
+      showElement(errorContainer);
+    }
+  };
+  const error = {
+    addError: (errorText: string) => {
+      errors.push(errorText);
+      renderError(errorText);
+      return error;
+    },
+    error: (errorText: string) => {
+      errors = [errorText];
+      errorContainer.innerHTML = "";
+      renderError(errorText);
+      return error;
+    },
+    clearErrors: () => {
+      errors = [];
+      errorContainer.innerHTML = "";
+      hidden = true;
       hideElement(errorContainer);
-      var errors = [];
-      const renderError = (error: string) => {
-        const errorMessageElement: HTMLElement = createSubElementWithClass(
-          errorContainer,
-          "div",
-          lookupClass("card-error"),
-        );
-        errorMessageElement.innerText = error;
-        if (hidden) {
-          hidden = false;
-          showElement(errorContainer);
-        }
-      };
-      return {
-        addError: (error: string) => {
-          errors.push(error);
-          renderError(error);
-        },
-        error: (error: string) => {
-          errors = [error];
-          errorContainer.innerHTML = "";
-          renderError(error);
-        },
-        clearErrors: () => {
-          errors = [];
-          errorContainer.innerHTML = "";
-          hidden = true;
-          hideElement(errorContainer);
-        },
-      };
+      return error;
     },
-  },
-};
-const inputDefinitions = {
-  input: {
-    build: (container: HTMLElement, type: string, prompt: string) => {
-      const itemContainer = createSubElementWithClass(
-        container,
-        "div",
-        lookupClass("card-item"),
-      );
-      const promptContainer = createSubElementWithClass(
-        itemContainer,
-        "div",
-        lookupClass("card-prompt"),
-      );
-      promptContainer.innerText = prompt;
-      const errorMethods = proxyChainer(errorsDefinition, [
-        itemContainer,
-      ]).errors();
-      let inputContainer;
-      if (type.trim().toLowerCase() == "multiline") {
-        inputContainer = createSubElementWithClass(
-          itemContainer,
-          "textarea",
-          lookupClass("card-input"),
-        );
-      } else {
-        inputContainer = createSubElementWithClass(
-          itemContainer,
-          "input",
-          lookupClass("card-input"),
-        );
-        inputContainer.setAttribute("type", type);
-      }
-      return {
-        setName: (name: string) => {
-          inputContainer.setAttribute("name", name);
-        },
-        onchange: (handler: Function) => {
-          inputContainer.onchange = () => {
-            handler((inputContainer as HTMLInputElement).value);
-          };
-        },
-        focus: () => {
-          inputContainer.focus();
-        },
-        show: () => {
-          showElement(itemContainer);
-        },
-        hide: () => {
-          hideElement(itemContainer);
-        },
-        withValue: (handler: Function) => {
-          handler((inputContainer as HTMLInputElement).value);
-        },
-        ...errorMethods,
-      };
-    },
-  },
-  select: {
-    build: (
-      container: HTMLElement,
-      values: { [key: string]: any }[],
-      prompt: string,
-    ) => {
-      log(lookupClass("card-item", "card-select-container"));
-      const itemContainer = createSubElementWithClass(
-        container,
-        "div",
-        lookupClass("card-item"),
-      );
-      const promptContainer = createSubElementWithClass(
-        itemContainer,
-        "label",
-        lookupClass("card-prompt"),
-      );
-      const selectionContainer = createSubElementWithClass(
-        itemContainer,
-        "div",
-        lookupClass("card-select-container"),
-      );
-      promptContainer.innerText = prompt;
-      const errorMethods = proxyChainer(errorsDefinition, [
-        itemContainer,
-      ]).errors();
-      const selectElement = createSubElementWithClass(
-        selectionContainer,
-        "select",
-        lookupClass("card-selection"),
-      ) as HTMLSelectElement;
-      createSubElement(selectElement, "option");
-      // optionContainer.innerText = prompt;
-      for (let value of values) {
-        for (let key in value) {
-          const optionContainer = createSubElement(selectElement, "option");
-          optionContainer.setAttribute("value", key);
-          optionContainer.innerText = value[key];
-        }
-      }
-      return {
-        setName: (name: string) => {
-          selectElement.setAttribute("name", name);
-        },
-        onchange: (handler: Function) => {
-          selectElement.onchange = () => {
-            handler(selectElement.value);
-          };
-        },
-        focus: () => {
-          selectElement.focus();
-        },
-        show: () => {
-          showElement(itemContainer);
-        },
-        hide: () => {
-          hideElement(itemContainer);
-        },
-        withValue: (handler: Function) => {
-          handler(selectElement.value);
-        },
-        ...errorMethods,
-      };
-    },
-  },
-  choices: {
-    build: (container: HTMLElement, values: any[], prompt: string) => {
-      const itemContainer = createSubElementWithClass(
-        container,
-        "div",
-        lookupClass("card-item"),
-      );
-      const promptContainer = createSubElementWithClass(
-        itemContainer,
-        "div",
-        lookupClass("card-prompt"),
-      );
-      promptContainer.innerText = prompt;
-      const errorMethods = proxyChainer(errorsDefinition, [
-        itemContainer,
-      ]).errors();
-      const selectContainer = createSubElementWithClass(
-        itemContainer,
-        "div",
-        lookupClass("card-choices"),
-      ) as HTMLSelectElement;
-      // const fieldSet = createSubElementWithClass(selectContainer, "fieldset", lookupClass("card-choices"));
-      let firstContainer: HTMLElement;
-      let counter = 0;
-      for (let value of values) {
-        for (let key in value) {
-          const optionContainer = createSubElementWithClass(
-            selectContainer,
-            "div",
-            lookupClass("card-choice"),
-          );
-          const checkBoxContainer = createSubElementWithClass(
-            optionContainer,
-            "input",
-            lookupClass("card-input-checkbox"),
-          );
-          if (counter == 0) {
-            firstContainer = checkBoxContainer;
-          }
-          counter += 1;
-          checkBoxContainer.setAttribute("type", "checkbox");
-          checkBoxContainer.setAttribute("value", key);
-          checkBoxContainer.setAttribute("id", key);
-          const textContainer = createSubElementWithClass(
-            optionContainer,
-            "label",
-            lookupClass("card-choice-label"),
-          );
-          textContainer.setAttribute("for", key);
-          textContainer.innerText = value[key];
-        }
-      }
-      return {
-        setName: (name: string) => {
-          selectContainer.setAttribute("name", name);
-        },
-        onchange: (handler: Function) => {
-          selectContainer.onchange = () => {
-            handler(selectContainer.value);
-          };
-        },
-        focus: () => {
-          if (firstContainer) {
-            firstContainer.focus();
-          }
-        },
-        show: () => {
-          showElement(itemContainer);
-        },
-        hide: () => {
-          hideElement(itemContainer);
-        },
-        withValue: (handler: Function) => {
-          handler(selectContainer.value);
-        },
-        ...errorMethods,
-      };
-    },
-  },
+  };
+  return error;
 };
 
-interface WithValue {
-  withValue: Function;
-  focus: Function;
-}
-
-const formGroupDefinition = {
-  formGroup: {
-    build: (container: HTMLElement) => {
-      const inputMethods = proxyChainer(inputDefinitions, [container]);
-      const proxifiedMethods: { [key: string]: any } = {};
-      const keyMap: { [key: string]: WithValue } = {};
-      for (let [methodName, methodFunction] of Object.entries(inputMethods)) {
-        proxifiedMethods[methodName] = (key: string, ...args: any[]) => {
-          const input = methodFunction(...args);
-          input.setName(key);
-          keyMap[key] = input;
-          return input;
-        };
-      }
-      return {
-        withValueMap: (handler: Function) => {
-          const map: { [key: string]: any } = {};
-          for (let [key, input] of Object.entries(keyMap)) {
-            input.withValue((value: any) => {
-              map[key] = value;
-            });
-          }
-          handler(map);
-        },
-        focus: (key: string) => {
-          const elementToFocus = keyMap[key];
-          if (elementToFocus != undefined) {
-            elementToFocus.focus();
-          }
-        },
-        ...proxifiedMethods,
-      };
-    },
-  },
-};
-
-const sectionDefinition = {
-  section: {
-    build: (container: HTMLElement, title: string) => {
-      const sectionContainer = createSubElementWithClass(
-        container,
-        "div",
-        lookupClass("card-section"),
-      );
-      const sectionHeaderContainer = createSubElementWithClass(
-        sectionContainer,
-        "h3",
-        lookupClass("card-section-header"),
-      );
-      if (title) {
-        const sectionHeaderTitleContainer = createSubElementWithClass(
-          sectionHeaderContainer,
-          "div",
-          lookupClass("card-section-header-title"),
-        );
-        sectionHeaderTitleContainer.innerText = title;
-      }
-      const inputMethods = proxyChainer(inputDefinitions, [sectionContainer]);
-      const actionListMethods = proxyChainer(actionListDefinition, [
-        sectionContainer,
-      ]);
-      const textMethods = proxyChainer(textDefinition, [sectionContainer]);
-      const formGroupMethods = proxyChainer(formGroupDefinition, [
-        sectionContainer,
-      ]);
-      const errorMethods = proxyChainer(errorsDefinition, [
-        sectionContainer,
-      ]).errors();
-      const tableMethods = proxyChainer(tableDefinition, [sectionContainer]);
-      const busyLoaderContainer = createBusyLoader(sectionContainer);
-      return {
-        busy: () => {
-          busyLoaderContainer.style.display = "flex";
-        },
-        available: () => {
-          busyLoaderContainer.style.display = "none";
-        },
-        show: () => {
-          showElement(sectionContainer);
-        },
-        hide: () => {
-          hideElement(sectionContainer);
-        },
-        ...inputMethods,
-        ...tableMethods,
-        ...actionListMethods,
-        ...formGroupMethods,
-        ...errorMethods,
-        ...textMethods,
-      };
-    },
-  },
-};
-
-const cardDefinition = {
-  card: {
-    build: (container: any) => {
-      const cardContainer = createSubElementWithClass(
-        container,
-        "div",
-        lookupClass("card"),
-      );
-      const bodyContainer = createSubElementWithClass(
-        cardContainer,
-        "div",
-        lookupClass("card-body"),
-      );
-      const headerContainer = createSubElementWithClass(
-        bodyContainer,
-        "div",
-        lookupClass("card-header"),
-      );
-      const titleContainer = createSubElementWithClass(
-        headerContainer,
-        "h1",
-        lookupClass("card-title"),
-      );
-      const sections: Hideable[] = [];
-      const errorMethods = proxyChainer(errorsDefinition, [
-        bodyContainer,
-      ]).errors();
-      const sectionMethods = proxyChainer(sectionDefinition, [bodyContainer]);
-      const unProxifiedNewSection = sectionMethods.section;
-      sectionMethods.section = (...args: any[]) => {
-        const newSection = unProxifiedNewSection(...args);
-        sections.push(newSection);
-        return newSection;
-      };
-      hideElement(headerContainer);
-      hideElement(titleContainer);
-      const busyLoaderContainer = createBusyLoader(cardContainer);
-      return {
-        title: (title: string) => {
-          title = title;
-          titleContainer.innerText = title;
-          showElement(headerContainer);
-          showElement(titleContainer);
-        },
-        hideAllSections: () => {
-          for (let section of sections) {
-            section.hide();
-          }
-        },
-        busy: () => {
-          busyLoaderContainer.style.display = "flex";
-        },
-        available: () => {
-          busyLoaderContainer.style.display = "none";
-        },
-        ...errorMethods,
-        ...sectionMethods,
-      };
-    },
-  },
-};
-export const card = (containerId: string) => {
-  const container = document.getElementById(containerId);
-  if (container != undefined) {
-    let cardMethods = proxyChainer(cardDefinition, [container]);
-    return cardMethods.card();
+export const buildInput = (
+  container: HTMLElement,
+  type: string,
+  prompt: string,
+): Input => {
+  const itemContainer = createSubElementWithClass(
+    container,
+    "div",
+    lookupClass("card-item"),
+  );
+  const promptContainer = createSubElementWithClass(
+    itemContainer,
+    "div",
+    lookupClass("card-prompt"),
+  );
+  promptContainer.innerText = prompt;
+  const errorMethods = buildError(container);
+  let inputContainer;
+  if (type.trim().toLowerCase() == "multiline") {
+    inputContainer = createSubElementWithClass(
+      itemContainer,
+      "textarea",
+      lookupClass("card-input"),
+    );
   } else {
-    log("can't find container", containerId);
+    inputContainer = createSubElementWithClass(
+      itemContainer,
+      "input",
+      lookupClass("card-input"),
+    );
+    inputContainer.setAttribute("type", type);
+  }
+  const input: Input = {
+    setName: (name: string) => {
+      inputContainer.setAttribute("name", name);
+      return input;
+    },
+    onChange: (handler: Function) => {
+      inputContainer.onchange = () => {
+        handler((inputContainer as HTMLInputElement).value);
+      };
+    },
+    focus: () => {
+      inputContainer.focus();
+      return input;
+    },
+    show: () => {
+      showElement(itemContainer);
+      return input;
+    },
+    hide: () => {
+      hideElement(itemContainer);
+      return input;
+    },
+    withValue: (handler: Function) => {
+      handler((inputContainer as HTMLInputElement).value);
+      return input;
+    },
+    ...errorMethods,
+  };
+  return input;
+};
+
+export const buildSelect = (
+  container: HTMLElement,
+  values: { [key: string]: any }[],
+  prompt: string,
+): Select => {
+  const itemContainer = createSubElementWithClass(
+    container,
+    "div",
+    lookupClass("card-item"),
+  );
+  const promptContainer = createSubElementWithClass(
+    itemContainer,
+    "label",
+    lookupClass("card-prompt"),
+  );
+  const selectionContainer = createSubElementWithClass(
+    itemContainer,
+    "div",
+    lookupClass("card-select-container"),
+  );
+  promptContainer.innerText = prompt;
+  const errorMethods = buildError(container);
+  const selectElement = createSubElementWithClass(
+    selectionContainer,
+    "select",
+    lookupClass("card-selection"),
+  ) as HTMLSelectElement;
+  createSubElement(selectElement, "option");
+  // optionContainer.innerText = prompt;
+  for (let value of values) {
+    for (let key in value) {
+      const optionContainer = createSubElement(selectElement, "option");
+      optionContainer.setAttribute("value", key);
+      optionContainer.innerText = value[key];
+    }
+  }
+  const select = {
+    setName: (name: string) => {
+      selectElement.setAttribute("name", name);
+      return select;
+    },
+    onChange: (handler: Function) => {
+      selectElement.onchange = () => {
+        handler(selectElement.value);
+      };
+    },
+    focus: () => {
+      selectElement.focus();
+      return select;
+    },
+    show: () => {
+      showElement(itemContainer);
+      return select;
+    },
+    hide: () => {
+      hideElement(itemContainer);
+      return select;
+    },
+    withValue: (handler: Function) => {
+      handler(selectElement.value);
+      return select;
+    },
+    ...errorMethods,
+  };
+  return select;
+};
+export interface Choice extends Error {
+  setName: SetNameFunction<Choice>;
+  focus: FocusFunction<Choice>;
+  show: ShowFunction<Choice>;
+  hide: HideFunction<Choice>;
+  withValue: WithValueFunction<Choices>;
+}
+export const buildChoices = (
+  container: HTMLElement,
+  values: any[],
+  prompt: string,
+): Choice => {
+  const itemContainer = createSubElementWithClass(
+    container,
+    "div",
+    lookupClass("card-item"),
+  );
+  const promptContainer = createSubElementWithClass(
+    itemContainer,
+    "div",
+    lookupClass("card-prompt"),
+  );
+  promptContainer.innerText = prompt;
+  const errorMethods = buildError(container);
+  const selectContainer = createSubElementWithClass(
+    itemContainer,
+    "div",
+    lookupClass("card-choices"),
+  ) as HTMLSelectElement;
+  let firstContainer: HTMLElement;
+  let counter = 0;
+  for (let value of values) {
+    for (let key in value) {
+      const optionContainer = createSubElementWithClass(
+        selectContainer,
+        "div",
+        lookupClass("card-choice"),
+      );
+      const checkBoxContainer = createSubElementWithClass(
+        optionContainer,
+        "input",
+        lookupClass("card-input-checkbox"),
+      );
+      if (counter == 0) {
+        firstContainer = checkBoxContainer;
+      }
+      counter += 1;
+      checkBoxContainer.setAttribute("type", "checkbox");
+      checkBoxContainer.setAttribute("value", key);
+      checkBoxContainer.setAttribute("id", key);
+      const textContainer = createSubElementWithClass(
+        optionContainer,
+        "label",
+        lookupClass("card-choice-label"),
+      );
+      textContainer.setAttribute("for", key);
+      textContainer.innerText = value[key];
+    }
+  }
+  const choices: Choice = {
+    setName: (name: string) => {
+      selectContainer.setAttribute("name", name);
+      return choices;
+    },
+    onchange: (handler: Function) => {
+      selectContainer.onchange = () => {
+        handler(selectContainer.value);
+      };
+    },
+    focus: () => {
+      if (firstContainer) {
+        firstContainer.focus();
+      }
+      return choices;
+    },
+    show: () => {
+      showElement(itemContainer);
+      return choices;
+    },
+    hide: () => {
+      hideElement(itemContainer);
+      return choices;
+    },
+    withValue: (handler: Function) => {
+      handler(selectContainer.value);
+      return choices;
+    },
+    ...errorMethods,
+  };
+  return choices;
+};
+
+export const buildFormGroup = (container: HTMLElement): FormGroup => {
+  const formGroup = {
+    withValueMap: (handler: Function) => {
+      const map: { [key: string]: any } = {};
+      for (let [key, input] of Object.entries(keyMap)) {
+        input.withValue((value: any) => {
+          map[key] = value;
+        });
+      }
+      handler(map);
+      return formGroup;
+    },
+    focus: (key: string) => {
+      const elementToFocus = keyMap[key];
+      if (elementToFocus) {
+        elementToFocus.focus();
+      }
+      return formGroup;
+    },
+    select: (values: { [key: string]: any }[], prompt: string) => {
+      return buildSelect(container, values, prompt);
+    },
+    input: (type: string, prompt: string) => {
+      return buildInput(container, type, prompt);
+    },
+  };
+  return formGroup;
+};
+
+export const buildSection = (
+  container: HTMLElement,
+  title: string,
+): Section => {
+  const sectionContainer = createSubElementWithClass(
+    container,
+    "div",
+    lookupClass("card-section"),
+  );
+  const sectionHeaderContainer = createSubElementWithClass(
+    sectionContainer,
+    "h3",
+    lookupClass("card-section-header"),
+  );
+  if (title) {
+    const sectionHeaderTitleContainer = createSubElementWithClass(
+      sectionHeaderContainer,
+      "div",
+      lookupClass("card-section-header-title"),
+    );
+    sectionHeaderTitleContainer.innerText = title;
+  }
+  const allActions = [];
+  const busyLoaderContainer = createBusyLoader(sectionContainer);
+  const section = {
+    busy: () => {
+      busyLoaderContainer.style.display = "flex";
+      return section;
+    },
+    available: () => {
+      busyLoaderContainer.style.display = "none";
+      return section;
+    },
+    show: () => {
+      showElement(sectionContainer);
+      return section;
+    },
+    hide: () => {
+      hideElement(sectionContainer);
+      return section;
+    },
+    action: (text: string) => {
+      const anAction = buildAction(container, text);
+      allActions.push(anAction);
+      return anAction;
+    },
+    actions: () => {
+      return allActions;
+    },
+    formGroup: () => {
+      return buildFormGroup(sectionContainer);
+    },
+    // ...inputMethods,
+    // ...tableMethods,
+    // ...actionListMethods,
+    // ...formGroupMethods,
+    // ...errorMethods,
+    // ...textMethods,
+  };
+  return section;
+};
+export const buildCard = (containerId: any): Card => {
+  const container = document.getElementById(containerId);
+  if (!container) {
+    throw `can't find element ${containerId}`;
+  }
+  const cardContainer = createSubElementWithClass(
+    container,
+    "div",
+    lookupClass("card"),
+  );
+  const bodyContainer = createSubElementWithClass(
+    cardContainer,
+    "div",
+    lookupClass("card-body"),
+  );
+  const headerContainer = createSubElementWithClass(
+    bodyContainer,
+    "div",
+    lookupClass("card-header"),
+  );
+  const titleContainer = createSubElementWithClass(
+    headerContainer,
+    "h1",
+    lookupClass("card-title"),
+  );
+  const sections: ShowHideable<Section>[] = [];
+  const errorMethods = buildError(container);
+  // const sectionMethods = buildSection(container, );
+  // const unProxifiedNewSection = sectionMethods.section;
+  // sectionMethods.section = (...args: any[]) => {
+  //   const newSection = unProxifiedNewSection(...args);
+  //   sections.push(newSection);
+  //   return newSection;
+  // };
+  hideElement(headerContainer);
+  hideElement(titleContainer);
+  const busyLoaderContainer = createBusyLoader(cardContainer);
+  const card: Card = {
+    title: (title: string) => {
+      title = title;
+      titleContainer.innerText = title;
+      showElement(headerContainer);
+      showElement(titleContainer);
+      return card;
+    },
+    hideAllSections: () => {
+      for (let section of sections) {
+        section.hide();
+      }
+      return card;
+    },
+    busy: () => {
+      busyLoaderContainer.style.display = "flex";
+      return card;
+    },
+    available: () => {
+      busyLoaderContainer.style.display = "none";
+      return card;
+    },
+    section: (title: string) => {
+      const aSection = buildSection(bodyContainer, title);
+      return aSection;
+    },
+    ...errorMethods,
+  };
+  return card;
+};
+
+export const card = (containerId: string): Card => {
+  const container = document.getElementById(containerId);
+  if (container) {
+    return buildCard(containerId);
+  } else {
+    throw `can't find container ${containerId}`;
   }
 };

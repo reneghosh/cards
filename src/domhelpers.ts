@@ -1,6 +1,7 @@
 import { lookupClass } from "./cards";
 
 declare const document: Document;
+
 export const createSubElement = (
   parentContainer: HTMLElement,
   tagName: string,
@@ -17,9 +18,9 @@ export const createSubElementWithClass = (
 ): HTMLElement => {
   const container = document.createElement(tagName);
   if (className && className.length > 0) {
-    for (let eachClass of className.trim().split(" ")) {
+    for (let aClass of className.trim().split(" ")) {
       if (className.length > 0) {
-        container.classList.add(eachClass);
+        container.classList.add(aClass);
       }
     }
   }
@@ -33,7 +34,7 @@ export const hideElement = (element: HTMLElement) => {
   if (cardShownClass && cardShownClass.length > 0) {
     element.classList.remove(cardShownClass);
   }
-  if (cardHiddenClass != undefined && cardHiddenClass.length > 0) {
+  if (cardHiddenClass) {
     element.classList.add(cardHiddenClass);
   }
 };
@@ -41,10 +42,10 @@ export const hideElement = (element: HTMLElement) => {
 export const showElement = (element: HTMLElement) => {
   const cardShownClass = lookupClass("card-shown");
   const cardHiddenClass = lookupClass("card-hidden");
-  if (cardShownClass != undefined && cardShownClass.length > 0) {
+  if (cardShownClass) {
     element.classList.add(cardShownClass);
   }
-  if (cardHiddenClass != undefined && cardHiddenClass.length > 0) {
+  if (cardHiddenClass) {
     element.classList.remove(cardHiddenClass);
   }
 };

@@ -11,18 +11,18 @@ const init = (containerId: string) => {
       [{ save: "Yes" }, { dontSave: "No" }],
       "Save Credentials:",
     )
-    .onchange((value: string) => log("save credentials set to:", value));
+    .onChange((value: string) => log("save credentials set to:", value));
   formGroup
     .input("login", "text", "Login: ")
-    .onchange((login: string) => console.log("login value set to:", login));
+    .onChange((login: string) => console.log("login value set to:", login));
   formGroup
     .input("password", "password", "Password: ")
-    .onchange((password: string) =>
+    .onChange((password: string) =>
       console.log("password value set to:", password),
     );
   formGroup
     .input("comment", "multiline", "Comment: ")
-    .onchange((comment: string) => console.log("comment set to:", comment));
+    .onChange((comment: string) => console.log("comment set to:", comment));
   const loginActions = loginSection.actions();
   loginActions
     .action("Cancel")
