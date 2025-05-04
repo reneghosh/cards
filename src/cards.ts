@@ -9,7 +9,6 @@ import {
   Action,
   ActionsList,
   Card,
-  Errors,
   FocusFunction,
   FormGroup,
   HideFunction,
@@ -20,6 +19,7 @@ import {
   ShowFunction,
   ShowHideable,
   Table,
+  Text,
   WithValueFunction,
 } from "./types";
 
@@ -518,7 +518,7 @@ export const buildSection = (
     );
     sectionHeaderTitleContainer.innerText = title;
   }
-  const errors: Errors[] = [];
+  const errors = buildError(errorContainer);
   const busyLoaderContainer = createBusyLoader(sectionContainer);
   const section = {
     busy: () => {
@@ -540,11 +540,6 @@ export const buildSection = (
     action: (text: string) => {
       return buildAction(actionsContainer, text);
     },
-    error: (text: string) => {
-      const anError = buildError(errorContainer);
-      errors.push(anError);
-      return anError;
-    },
     table: (headers: string[]) => {
       return buildTable(container, headers);
     },
@@ -554,6 +549,7 @@ export const buildSection = (
     formGroup: () => {
       return buildFormGroup(sectionContainer);
     },
+    ...errors,
   };
   return section;
 };
@@ -596,7 +592,8 @@ export const buildCard = (containerId: any): Card => {
   const errorMethods = buildError(container);
   hideElement(headerContainer);
   hideElement(titleContainer);
-  const busyLoaderContainer = createBusyLoader(cardContainer);
+  const busyContainer = createBusyLoader(cardContainer);
+  const busyLoaderContainer = createBusyLoader(busyContainer);
   const card: Card = {
     title: (title: string) => {
       title = title;
@@ -611,11 +608,25 @@ export const buildCard = (containerId: any): Card => {
       }
       return card;
     },
-    ...makeBusyOrAvailable(busyLoaderContainer),
+    showAllSections: () => {
+      for (let section of sections) {
+        section.show();
+      }
+      return card;
+    },
     section: (title: string) => {
       const aSection = buildSection(bodyContainer, title);
       return aSection;
     },
+    show: () => {
+      showElement(cardContainer);
+      return card;
+    },
+    hide: () => {
+      hideElement(cardContainer);
+      return card;
+    },
+    ...makeBusyOrAvailable(busyLoaderContainer),
     ...errorMethods,
   };
   return card;
