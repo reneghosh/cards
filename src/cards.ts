@@ -616,6 +616,7 @@ export const buildCard = (containerId: any): Card => {
     },
     section: (title: string) => {
       const aSection = buildSection(bodyContainer, title);
+      sections.push(aSection);
       return aSection;
     },
     show: () => {

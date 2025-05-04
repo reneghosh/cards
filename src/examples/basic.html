@@ -1,26 +1,41 @@
 <!doctype html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="../style.css">
-        <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
-        <script type="module">
-            import { card } from "../cards.js";
-            window.onload = () => {
-                const mainCard = card("main").title("Card Example");
-                const loginSection = mainCard.section("Log in");
-                const formGroup = loginSection.formGroup();
-                formGroup.input("login", "text", "Login: ").onchange(login => console.log("login value set to:", login));
-                formGroup.input("password", "password", "Password: ").onchange(password => console.log("password value set to:", password));
-                const loginActions = loginSection.actions();
-                loginActions.action("Cancel").onclick(() => loginSection.error("You don't seem to want to log in"));
-                loginActions.action("Submit").onclick(() => { card.busy(); setTimeout(() => card.available(), 3000) });
-                loginActions.action("Show input map").onclick(() => formGroup.withValueMap(valueMap => console.log(valueMap)));
-            };
-        </script>
-    </head>
-    <body>
-        <div id="main" style="width: 30em">
-        </div>
-    </body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+    <script type="module">
+      import { card } from "../cards";
+      window.onload = () => {
+        const mainCard = card("main").title("Card Example");
+        const loginSection = mainCard.section("Log in");
+        const formGroup = loginSection.formGroup();
+        formGroup
+          .input("login", "text", "Login: ")
+          .onChange((login) => console.log("login value set to:", login));
+        formGroup
+          .input("password", "password", "Password: ")
+          .onChange((password) =>
+            console.log("password value set to:", password),
+          );
+        loginSection
+          .action("Cancel")
+          .onClick(() =>
+            loginSection.error("You don't seem to want to log in"),
+          );
+        loginSection.action("Submit").onClick(() => {
+          mainCard.busy();
+          setTimeout(() => mainCard.available(), 3000);
+        });
+        loginSection
+          .action("Show input map")
+          .onClick(() =>
+            formGroup.withValueMap((valueMap) => console.log(valueMap)),
+          );
+      };
+    </script>
+  </head>
+  <body>
+    <div id="main" style="width: 30em"></div>
+  </body>
 </html>
