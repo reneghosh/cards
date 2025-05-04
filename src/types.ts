@@ -1,5 +1,7 @@
-export interface Errors<Type> {
-  error: ErrorFunction<Type>;
+export interface Errors {
+  error: ErrorFunction;
+  addError: AddErrorFunction;
+  clearErrors: ClearErrorsFunction;
 }
 export interface FormGroup {
   withValueMap: WithValueMapFunction<FormGroup>;
@@ -7,7 +9,7 @@ export interface FormGroup {
   select: SelectFunction;
   input: InputFunction;
 }
-export interface Section extends Errors<Section> {
+export interface Section extends Errors {
   show: ShowFunction<Section>;
   hide: HideFunction<Section>;
   busy: BusyFunction<Section>;
@@ -15,13 +17,22 @@ export interface Section extends Errors<Section> {
   formGroup: FormGroupFunction;
   action: ActionFunction;
   table: TableFunction;
-  error: ErrorFunction<Section>;
+  error: ErrorFunction;
+  choice: ChoiceFunction;
 }
 
 export interface Action {
   show: ShowFunction<Action>;
   hide: HideFunction<Action>;
   onClick: OnClickFunction;
+}
+export interface Choice {
+  setName: SetNameFunction<Choice>;
+  focus: FocusFunction<Choice>;
+  show: ShowFunction<Choice>;
+  hide: HideFunction<Choice>;
+  withValue: WithValueFunction<Choice>;
+  onChange: OnChangeFunction;
 }
 export interface Table {
   show: ShowFunction<Table>;
@@ -40,7 +51,7 @@ export interface Text {
   hide: HideFunction<Text>;
   setText: SetTextFunction<Text>;
 }
-export interface Input extends Errors<Input> {
+export interface Input extends Errors {
   focus: FocusFunction<Input>;
   show: ShowFunction<Input>;
   hide: HideFunction<Input>;
@@ -48,7 +59,7 @@ export interface Input extends Errors<Input> {
   setName: SetNameFunction<Input>;
   onChange: OnChangeFunction;
 }
-export interface Select extends Errors<Select> {
+export interface Select extends Errors {
   setName: SetNameFunction<Select>;
   show: ShowFunction<Select>;
   hide: HideFunction<Select>;
@@ -124,14 +135,14 @@ export interface ClearAllRowsFunction<Type> {
 export interface SetTextFunction<Type> {
   (text: string): Type;
 }
-export interface AddErrorFunction<Type> {
-  (error: string): Type;
+export interface AddErrorFunction {
+  (error: string): Errors;
 }
-export interface ErrorFunction<Type> {
-  (error: string): Type;
+export interface ClearErrorsFunction {
+  (): Errors;
 }
-export interface ClearErrorsFunction<Type> {
-  (): Type;
+export interface ErrorFunction {
+  (error: string): Errors;
 }
 export interface WithValueFunction<Type> {
   (handler: Function): Type;
@@ -152,5 +163,5 @@ export interface TableFunction {
   (headers: string[]): Table;
 }
 export interface ChoiceFunction {
-  (key: string, values: string[], prompt: string): Choice;
+  (values: string[], prompt: string): Choice;
 }

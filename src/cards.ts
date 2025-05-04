@@ -9,6 +9,7 @@ import {
   Action,
   ActionsList,
   Card,
+  Choice,
   FocusFunction,
   FormGroup,
   HideFunction,
@@ -175,8 +176,8 @@ export const buildText = (
       showElement(textContainer);
       return text;
     },
-    setText: (text: string) => {
-      textContainer.innerText = text;
+    setText: (textText: string) => {
+      textContainer.innerText = textText;
       return text;
     },
     hide: () => {
@@ -360,13 +361,6 @@ export const buildSelect = (
   };
   return select;
 };
-export interface Choice extends Error {
-  setName: SetNameFunction<Choice>;
-  focus: FocusFunction<Choice>;
-  show: ShowFunction<Choice>;
-  hide: HideFunction<Choice>;
-  withValue: WithValueFunction<Choices>;
-}
 export const buildChoices = (
   container: HTMLElement,
   values: any[],
@@ -424,10 +418,10 @@ export const buildChoices = (
       selectContainer.setAttribute("name", name);
       return choices;
     },
-    onchange: (handler: Function) => {
-      selectContainer.onchange = () => {
+    onChange: (handler: Function) => {
+      selectContainer.addEventListener("change", () => {
         handler(selectContainer.value);
-      };
+      });
     },
     focus: () => {
       if (firstContainer) {
@@ -458,6 +452,7 @@ export const buildFormGroup = (container: HTMLElement): FormGroup => {
   const formGroup = {
     withValueMap: (handler: Function) => {
       handler(valuesMap);
+      return formGroup;
     },
     focus: (key: string) => {
       const elementToFocus = keyMap[key];
