@@ -490,11 +490,6 @@ export const buildSection = (
   container: HTMLElement,
   title: string,
 ): Section => {
-  const errorContainer = createSubElementWithClass(
-    container,
-    "div",
-    lookupClass("card-errors"),
-  );
   const sectionContainer = createSubElementWithClass(
     container,
     "div",
@@ -518,7 +513,7 @@ export const buildSection = (
     );
     sectionHeaderTitleContainer.innerText = title;
   }
-  const errors = buildError(errorContainer);
+  const errors = buildError(sectionContainer);
   const busyLoaderContainer = createBusyLoader(sectionContainer);
   const section = {
     busy: () => {
@@ -553,16 +548,6 @@ export const buildSection = (
   };
   return section;
 };
-const makeBusyOrAvailable = (container: HTMLElement) => ({
-  busy: () => {
-    container.style.display = "flex";
-    return card;
-  },
-  available: () => {
-    container.style.display = "none";
-    return card;
-  },
-});
 export const buildCard = (containerId: any): Card => {
   const container = document.getElementById(containerId);
   if (!container) {
@@ -589,11 +574,10 @@ export const buildCard = (containerId: any): Card => {
     lookupClass("card-title"),
   );
   const sections: ShowHideable<Section>[] = [];
-  const errorMethods = buildError(container);
+  const errorMethods = buildError(bodyContainer);
   hideElement(headerContainer);
   hideElement(titleContainer);
   const busyContainer = createBusyLoader(cardContainer);
-  const busyLoaderContainer = createBusyLoader(busyContainer);
   const card: Card = {
     title: (title: string) => {
       title = title;
@@ -627,7 +611,16 @@ export const buildCard = (containerId: any): Card => {
       hideElement(cardContainer);
       return card;
     },
-    ...makeBusyOrAvailable(busyLoaderContainer),
+    busy: () => {
+      busyContainer.style.display = "flex";
+      busyContainer.style.border = "1px solid red";
+      console.log(busyContainer);
+      return card;
+    },
+    available: () => {
+      busyContainer.style.display = "none";
+      return card;
+    },
     ...errorMethods,
   };
   return card;
