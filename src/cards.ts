@@ -10,18 +10,13 @@ import {
   ActionsList,
   Card,
   Choice,
-  FocusFunction,
   FormGroup,
-  HideFunction,
   Input,
   Section,
   Select,
-  SetNameFunction,
-  ShowFunction,
   ShowHideable,
   Table,
   Text,
-  WithValueFunction,
 } from "./types";
 
 export const lookupClass = (...className: string[]): string => {
@@ -363,7 +358,7 @@ export const buildSelect = (
 };
 export const buildChoices = (
   container: HTMLElement,
-  values: any[],
+  values: { [key: string]: string }[],
   prompt: string,
 ): Choice => {
   const itemContainer = createSubElementWithClass(
@@ -533,7 +528,7 @@ export const buildSection = (
     table: (headers: string[]) => {
       return buildTable(container, headers);
     },
-    choice: (values: string[], prompt: string) => {
+    choice: (values: { [key: string]: string }[], prompt: string) => {
       return buildChoices(container, values, prompt);
     },
     formGroup: () => {

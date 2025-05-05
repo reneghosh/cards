@@ -26,7 +26,7 @@ export interface Action {
   hide: HideFunction<Action>;
   onClick: OnClickFunction;
 }
-export interface Choice {
+export interface Choice extends Errors {
   setName: SetNameFunction<Choice>;
   focus: FocusFunction<Choice>;
   show: ShowFunction<Choice>;
@@ -127,7 +127,7 @@ export interface OnChangeFunction {
   (handler: Function): void;
 }
 export interface AddRowFunction<Type> {
-  (values: string[]): Type;
+  (values: any[]): Type;
 }
 export interface ClearAllRowsFunction<Type> {
   (): Type;
@@ -154,7 +154,7 @@ export interface SetNameFunction<Type> {
   (name: string): Type;
 }
 export interface MakeSectionFunction {
-  (title: string): Section;
+  (title?: string): Section;
 }
 export interface ActionFunction {
   (title: string): Action;
@@ -163,5 +163,5 @@ export interface TableFunction {
   (headers: string[]): Table;
 }
 export interface ChoiceFunction {
-  (values: string[], prompt: string): Choice;
+  (values: { [key: string]: string }[], prompt: string): Choice;
 }
