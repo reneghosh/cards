@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "compile": "tsx src/*.ts"
+    "compile": "tsc src/**/*.ts"
   },
   "repository": {
     "type": "git",
@@ -16,11 +16,9 @@
     "url": "https://github.com/satelliteray/cards/issues"
   },
   "homepage": "https://github.com/satelliteray/cards#readme",
-  "dependencies": {
-    "typescript": "^5.8.3"
-  },
   "devDependencies": {
     "@types/node": "^22.14.1",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "typescript": "^5.8.3"
   }
 }
