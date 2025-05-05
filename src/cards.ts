@@ -442,7 +442,7 @@ export const buildChoices = (
 };
 
 export const buildFormGroup = (container: HTMLElement): FormGroup => {
-  const keyMap = {};
+  const keyMap: { [key: string]: any } = {};
   const valuesMap = {};
   const formGroup = {
     withValueMap: (handler: Function) => {
@@ -478,7 +478,7 @@ export const buildFormGroup = (container: HTMLElement): FormGroup => {
 
 export const buildSection = (
   container: HTMLElement,
-  title: string,
+  title?: string,
 ): Section => {
   const sectionContainer = createSubElementWithClass(
     container,
@@ -588,7 +588,7 @@ export const buildCard = (containerId: any): Card => {
       }
       return card;
     },
-    section: (title: string) => {
+    section: (title?: string) => {
       const aSection = buildSection(bodyContainer, title);
       sections.push(aSection);
       return aSection;
