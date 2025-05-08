@@ -4,7 +4,12 @@ export interface Errors {
   clearErrors: ClearErrorsFunction;
 }
 
-export interface Section extends Errors {
+export interface SectionFormElements {
+  choice: ChoiceFunction;
+  select: SelectFunction;
+  input: InputFunction;
+}
+export interface Section extends Errors, SectionFormElements {
   show: ShowFunction<Section>;
   hide: HideFunction<Section>;
   busy: BusyFunction<Section>;
@@ -12,11 +17,8 @@ export interface Section extends Errors {
   action: ActionFunction;
   table: TableFunction;
   error: ErrorFunction;
-  choice: ChoiceFunction;
   withValueMap: WithValueMapFunction<Section>;
   focus: FocusToKeyFunction<Section>;
-  select: SelectFunction;
-  input: InputFunction;
 }
 
 export interface Action {
@@ -65,7 +67,10 @@ export interface Select extends Errors {
   withValue: WithValueFunction<Select>;
   onChange: OnChangeFunction;
 }
-export interface Card extends ShowHideable<Card>, Busyable<Card> {
+export interface Card
+  extends ShowHideable<Card>,
+    Busyable<Card>,
+    SectionFormElements {
   title: TitleFunction<Card>;
   hideAllSections: HideAllSectionsFunction<Card>;
   showAllSections: ShowAllSectionsFunction<Card>;

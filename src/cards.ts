@@ -474,6 +474,8 @@ export const buildSection = (
     "div",
     lookupClass("card-actions"),
   );
+  hideElement(sectionHeaderContainer);
+  hideElement(sectionContainer);
   if (title) {
     const sectionHeaderTitleContainer = createSubElementWithClass(
       sectionHeaderContainer,
@@ -481,6 +483,7 @@ export const buildSection = (
       lookupClass("card-section-header-title"),
     );
     sectionHeaderTitleContainer.innerText = title;
+    showElement(sectionHeaderContainer);
   }
   const errors = buildError(sectionContainer);
   const busyLoaderContainer = createBusyLoader(sectionContainer);
@@ -505,13 +508,16 @@ export const buildSection = (
       return section;
     },
     action: (text: string) => {
+      showElement(sectionContainer);
       return buildAction(actionsContainer, text, valuesMap);
     },
     table: (headers: string[]) => {
+      showElement(sectionContainer);
       return buildTable(container, headers);
     },
     withValueMap: (handler: Function) => {
       handler(valuesMap);
+      showElement(sectionContainer);
       return parent;
     },
     focus: (key: string) => {
@@ -527,6 +533,7 @@ export const buildSection = (
       aSelect.onChange((value: string) => {
         Object.assign(valuesMap, { [key]: value });
       });
+      showElement(sectionContainer);
       return aSelect;
     },
     input: (key: string, type: string, prompt: string) => {
@@ -535,6 +542,7 @@ export const buildSection = (
       anInput.onChange((value: string) => {
         Object.assign(valuesMap, { [key]: value });
       });
+      showElement(sectionContainer);
       return anInput;
     },
     choice: (key: string, values: { [key: string]: any }[], prompt: string) => {
@@ -543,6 +551,8 @@ export const buildSection = (
       aChoice.onChange((value: string) => {
         Object.assign(valuesMap, { [key]: value });
       });
+      showElement(sectionContainer);
+      return aChoice;
     },
     ...errors,
   };
