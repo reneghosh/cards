@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
+    "rootDir": "src",
     "target": "ES2020",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
+    "module": "es2022",
+    "moduleResolution": "node10",
     "lib": [
       "es6",
       "dom",
@@ -10,17 +11,9 @@
     ],
     "sourceMap": true,
     "outDir": "dist",
-    "skipLibCheck": true,
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "noEmit": true,
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "declaration": true,
+    "emitDeclarationOnly": true
   },
   "include": [
     "src"

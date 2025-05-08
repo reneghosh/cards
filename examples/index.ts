@@ -1,5 +1,4 @@
-const log = console.log;
-import { card } from "../cards";
+import { card } from "../src/cards";
 
 const init = (containerId: string) => {
   const mainCard = card(containerId).title("Card Example");
@@ -11,7 +10,9 @@ const init = (containerId: string) => {
       [{ save: "Yes" }, { dontSave: "No" }],
       "Save Credentials:",
     )
-    .onChange((value: string) => log("save credentials set to:", value));
+    .onChange((value: string) =>
+      console.log("save credentials set to:", value),
+    );
   formGroup
     .input("login", "text", "Login: ")
     .onChange((login: string) => console.log("login value set to:", login));

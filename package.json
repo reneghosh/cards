@@ -1,6 +1,7 @@
 {
   "name": "cards",
   "version": "1.0.0",
+  "type": "module",
   "description": "A helper library to add simple form-based interactions to websites",
   "scripts": {
     "compile": "tsc --outDir dist  src/*.ts"

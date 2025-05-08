@@ -1,47 +1,48 @@
 <!doctype html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css"
+      integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK"
+      crossorigin="anonymous"
+    />
+    <script src="index.ts" type="module"></script>
+    <script type="module">
+      import { setStyleMapping } from "../src/cards";
+      setStyleMapping({
+        card: "flex-column border-bottom",
+        "card-body": "",
+        "card-header": "",
+        "card-sections": "flex-column",
+        "card-title": "text-center",
+        "card-errors": "bg-danger bd-gradient",
+        "card-error": "text-white",
+        "card-section": "border-top",
+        "card-section-header": "bg-light",
+        "card-section-header-title": "",
+        "card-table": "table table-striped",
+        "card-table-row": "",
+        "card-text": "lead",
+        "card-input": "form-control",
+        "card-item": "flex-row",
+        "card-hidden": "d-none",
+        "card-shown": "d-flex-column",
+        "card-prompt": "form-check-label",
+        "card-selection": "form-select",
+        "card-choices": "d-flex-row",
+        "card-choice": "form-check form-check-inline",
+        "card-input-checkbox": "form-check-input",
+        "card-choice-label": "form-check-label",
+        "card-action-list": "flex-row justify-content-center m-2",
+        "card-button": "btn btn-dark m-1",
+      });
+    </script>
+  </head>
 
-    <head>
-        <meta charset="utf-8">
-        <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css"
-            integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK" crossorigin="anonymous">
-        <script src="index.js" type="module"></script>
-        <script type="module">
-            import { setStyleMapping } from "../cards.js";
-            setStyleMapping({
-                "card": "flex-column border-bottom",
-                "card-body": "",
-                "card-header": "",
-                "card-sections": "flex-column",
-                "card-title": "text-center",
-                "card-errors": "bg-danger bd-gradient",
-                "card-error": "text-white",
-                "card-section": "border-top",
-                "card-section-header": "bg-light",
-                "card-section-header-title": "",
-                "card-table": "table table-striped",
-                "card-table-row": "",
-                "card-text": "lead",
-                "card-input": "form-control",
-                "card-item": "flex-row",
-                "card-hidden": "d-none",
-                "card-shown": "d-flex-column",
-                "card-prompt": "form-check-label",
-                "card-selection": "form-select",
-                "card-choices": "d-flex-row",
-                "card-choice": "form-check form-check-inline",
-                "card-input-checkbox": "form-check-input",
-                "card-choice-label": "form-check-label",
-                "card-action-list": "flex-row justify-content-center m-2",
-                "card-button": "btn btn-dark m-1",
-            });
-        </script>
-    </head>
-
-    <body>
-        <div id="main" style="max-width: 35em;">
-        </div>
-    </body>
-
+  <body>
+    <div id="main" style="max-width: 35em"></div>
+  </body>
 </html>
