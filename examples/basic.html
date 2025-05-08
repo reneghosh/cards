@@ -9,11 +9,10 @@
       window.onload = () => {
         const mainCard = card("main").title("Card Example");
         const loginSection = mainCard.section("Log in");
-        const formGroup = loginSection.formGroup();
-        formGroup
+        loginSection
           .input("login", "text", "Login: ")
           .onChange((login) => console.log("login value set to:", login));
-        formGroup
+        loginSection
           .input("password", "password", "Password: ")
           .onChange((password) =>
             console.log("password value set to:", password),
@@ -30,7 +29,7 @@
         loginSection
           .action("Show input map")
           .onClick(() =>
-            formGroup.withValueMap((valueMap) => console.log(valueMap)),
+            loginSection.withValueMap((valueMap) => console.log(valueMap)),
           );
       };
     </script>

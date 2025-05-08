@@ -3,8 +3,7 @@ import { card } from "../src/cards";
 const init = (containerId: string) => {
   const mainCard = card(containerId).title("Card Example");
   const loginSection = mainCard.section("Log in");
-  const formGroup = loginSection.formGroup();
-  formGroup
+  loginSection
     .select(
       "credentials",
       [{ save: "Yes" }, { dontSave: "No" }],
@@ -13,15 +12,15 @@ const init = (containerId: string) => {
     .onChange((value: string) =>
       console.log("save credentials set to:", value),
     );
-  formGroup
+  loginSection
     .input("login", "text", "Login: ")
     .onChange((login: string) => console.log("login value set to:", login));
-  formGroup
+  loginSection
     .input("password", "password", "Password: ")
     .onChange((password: string) =>
       console.log("password value set to:", password),
     );
-  formGroup
+  loginSection
     .input("comment", "multiline", "Comment: ")
     .onChange((comment: string) => console.log("comment set to:", comment));
   loginSection
@@ -34,7 +33,7 @@ const init = (containerId: string) => {
   loginSection
     .action("Show input map")
     .onClick(() =>
-      formGroup.withValueMap((valueMap: { [key: string]: string }) =>
+      loginSection.withValueMap((valueMap: { [key: string]: string }) =>
         console.log(valueMap),
       ),
     );
@@ -44,7 +43,7 @@ const init = (containerId: string) => {
   });
   loginSection.action("show hidden section").onClick(() => {
     loggedInSection.show();
-    formGroup.focus("password");
+    loginSection.focus("password");
   });
   loginSection
     .action("hide all sections")

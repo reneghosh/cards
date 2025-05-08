@@ -3,22 +3,20 @@ export interface Errors {
   addError: AddErrorFunction;
   clearErrors: ClearErrorsFunction;
 }
-export interface FormGroup {
-  withValueMap: WithValueMapFunction<FormGroup>;
-  focus: FocusToKeyFunction<FormGroup>;
-  select: SelectFunction;
-  input: InputFunction;
-}
+
 export interface Section extends Errors {
   show: ShowFunction<Section>;
   hide: HideFunction<Section>;
   busy: BusyFunction<Section>;
   available: AvailableFunction<Section>;
-  formGroup: FormGroupFunction;
   action: ActionFunction;
   table: TableFunction;
   error: ErrorFunction;
   choice: ChoiceFunction;
+  withValueMap: WithValueMapFunction<Section>;
+  focus: FocusToKeyFunction<Section>;
+  select: SelectFunction;
+  input: InputFunction;
 }
 
 export interface Action {
@@ -72,9 +70,7 @@ export interface Card extends ShowHideable<Card>, Busyable<Card> {
   hideAllSections: HideAllSectionsFunction<Card>;
   showAllSections: ShowAllSectionsFunction<Card>;
   section: MakeSectionFunction;
-}
-export interface FormGroupFunction {
-  (): FormGroup;
+  action: ActionFunction;
 }
 export interface HideAllSectionsFunction<Type> {
   (): Type;
@@ -163,5 +159,5 @@ export interface TableFunction {
   (headers: string[]): Table;
 }
 export interface ChoiceFunction {
-  (values: { [key: string]: string }[], prompt: string): Choice;
+  (key: string, values: { [key: string]: string }[], prompt: string): Choice;
 }

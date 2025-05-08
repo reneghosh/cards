@@ -10,7 +10,6 @@ import {
   ActionsList,
   Card,
   Choice,
-  FormGroup,
   Input,
   Section,
   Select,
@@ -37,7 +36,11 @@ export const setStyleMapping = (mapper: { [key: string]: string }) => {
   cardStyleMapper = mapper;
 };
 
-export const buildAction = (container: HTMLElement, text: string): Action => {
+export const buildAction = (
+  container: HTMLElement,
+  text: string,
+  valuesMap: { [key: string]: any },
+): Action => {
   const actionContainer = createSubElementWithClass(
     container,
     "button",
@@ -55,7 +58,7 @@ export const buildAction = (container: HTMLElement, text: string): Action => {
     },
     onClick: (handler: Function) => {
       actionContainer.onclick = () => {
-        handler();
+        handler(valuesMap);
       };
     },
   };
@@ -372,7 +375,7 @@ export const buildChoices = (
     lookupClass("card-prompt"),
   );
   promptContainer.innerText = prompt;
-  const errorMethods = buildError(container);
+  const errors = buildError(container);
   const selectContainer = createSubElementWithClass(
     itemContainer,
     "div",
@@ -380,6 +383,7 @@ export const buildChoices = (
   ) as HTMLSelectElement;
   let firstContainer: HTMLElement;
   let counter = 0;
+  const selectedValues = new Set<string>();
   for (let value of values) {
     for (let key in value) {
       const optionContainer = createSubElementWithClass(
@@ -391,7 +395,7 @@ export const buildChoices = (
         optionContainer,
         "input",
         lookupClass("card-input-checkbox"),
-      );
+      ) as HTMLInputElement;
       if (counter == 0) {
         firstContainer = checkBoxContainer;
       }
@@ -399,6 +403,13 @@ export const buildChoices = (
       checkBoxContainer.setAttribute("type", "checkbox");
       checkBoxContainer.setAttribute("value", key);
       checkBoxContainer.setAttribute("id", key);
+      checkBoxContainer.addEventListener("change", () => {
+        if (checkBoxContainer.checked) {
+          selectedValues.add(key);
+        } else {
+          selectedValues.delete(key);
+        }
+      });
       const textContainer = createSubElementWithClass(
         optionContainer,
         "label",
@@ -414,9 +425,12 @@ export const buildChoices = (
       return choices;
     },
     onChange: (handler: Function) => {
-      selectContainer.addEventListener("change", () => {
-        handler(selectContainer.value);
-      });
+      const allInputs = Array.from(selectContainer.querySelectorAll("input"));
+      for (let anInput of allInputs) {
+        anInput.addEventListener("change", () => {
+          handler(Array.from(selectedValues.values()));
+        });
+      }
     },
     focus: () => {
       if (firstContainer) {
@@ -436,44 +450,9 @@ export const buildChoices = (
       handler(selectContainer.value);
       return choices;
     },
-    ...errorMethods,
+    ...errors,
   };
   return choices;
-};
-
-export const buildFormGroup = (container: HTMLElement): FormGroup => {
-  const keyMap: { [key: string]: any } = {};
-  const valuesMap = {};
-  const formGroup = {
-    withValueMap: (handler: Function) => {
-      handler(valuesMap);
-      return formGroup;
-    },
-    focus: (key: string) => {
-      const elementToFocus = keyMap[key];
-      if (elementToFocus) {
-        elementToFocus.focus();
-      }
-      return formGroup;
-    },
-    select: (key: string, values: { [key: string]: any }[], prompt: string) => {
-      const aSelect = buildSelect(container, values, prompt);
-      Object.assign(keyMap, { [key]: aSelect });
-      aSelect.onChange((value: string) => {
-        Object.assign(valuesMap, { [key]: value });
-      });
-      return aSelect;
-    },
-    input: (key: string, type: string, prompt: string) => {
-      const anInput = buildInput(container, type, prompt);
-      Object.assign(keyMap, { [key]: anInput });
-      anInput.onChange((value: string) => {
-        Object.assign(valuesMap, { [key]: value });
-      });
-      return anInput;
-    },
-  };
-  return formGroup;
 };
 
 export const buildSection = (
@@ -505,7 +484,10 @@ export const buildSection = (
   }
   const errors = buildError(sectionContainer);
   const busyLoaderContainer = createBusyLoader(sectionContainer);
-  const section = {
+  let section = {};
+  const keyMap: { [key: string]: any } = {};
+  const valuesMap = {};
+  section = {
     busy: () => {
       busyLoaderContainer.style.display = "flex";
       return section;
@@ -523,20 +505,48 @@ export const buildSection = (
       return section;
     },
     action: (text: string) => {
-      return buildAction(actionsContainer, text);
+      return buildAction(actionsContainer, text, valuesMap);
     },
     table: (headers: string[]) => {
       return buildTable(container, headers);
     },
-    choice: (values: { [key: string]: string }[], prompt: string) => {
-      return buildChoices(container, values, prompt);
+    withValueMap: (handler: Function) => {
+      handler(valuesMap);
+      return parent;
     },
-    formGroup: () => {
-      return buildFormGroup(sectionContainer);
+    focus: (key: string) => {
+      const elementToFocus = keyMap[key];
+      if (elementToFocus) {
+        elementToFocus.focus();
+      }
+      return parent;
+    },
+    select: (key: string, values: { [key: string]: any }[], prompt: string) => {
+      const aSelect = buildSelect(sectionContainer, values, prompt);
+      Object.assign(keyMap, { [key]: aSelect });
+      aSelect.onChange((value: string) => {
+        Object.assign(valuesMap, { [key]: value });
+      });
+      return aSelect;
+    },
+    input: (key: string, type: string, prompt: string) => {
+      const anInput = buildInput(sectionContainer, type, prompt);
+      Object.assign(keyMap, { [key]: anInput });
+      anInput.onChange((value: string) => {
+        Object.assign(valuesMap, { [key]: value });
+      });
+      return anInput;
+    },
+    choice: (key: string, values: { [key: string]: any }[], prompt: string) => {
+      const aChoice = buildChoices(sectionContainer, values, prompt);
+      Object.assign(keyMap, { [key]: aChoice });
+      aChoice.onChange((value: string) => {
+        Object.assign(valuesMap, { [key]: value });
+      });
     },
     ...errors,
   };
-  return section;
+  return section as Section;
 };
 export const buildCard = (containerId: any): Card => {
   const container = document.getElementById(containerId);
@@ -563,6 +573,7 @@ export const buildCard = (containerId: any): Card => {
     "h1",
     lookupClass("card-title"),
   );
+  const untitledSection = buildSection(bodyContainer);
   const sections: ShowHideable<Section>[] = [];
   const errorMethods = buildError(bodyContainer);
   hideElement(headerContainer);
@@ -570,7 +581,6 @@ export const buildCard = (containerId: any): Card => {
   const busyContainer = createBusyLoader(cardContainer);
   const card: Card = {
     title: (title: string) => {
-      title = title;
       titleContainer.innerText = title;
       showElement(headerContainer);
       showElement(titleContainer);
@@ -588,6 +598,7 @@ export const buildCard = (containerId: any): Card => {
       }
       return card;
     },
+    ...untitledSection,
     section: (title?: string) => {
       const aSection = buildSection(bodyContainer, title);
       sections.push(aSection);
@@ -611,6 +622,7 @@ export const buildCard = (containerId: any): Card => {
       busyContainer.style.display = "none";
       return card;
     },
+    action: untitledSection.action,
     ...errorMethods,
   };
   return card;

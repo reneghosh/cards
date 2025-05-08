@@ -34,10 +34,9 @@ Example using it in a webpage:
             window.onload = () => {
                 const mainCard = card("main").title("Card Example");
                 const loginSection = mainCard.section("Log in");
-                const formGroup = loginSection.formGroup();
-                formGroup.input("login", "text", "Login: ")
+                loginSection.input("login", "text", "Login: ")
                     .onchange(login => console.log("login value set to:", login));
-                formGroup.input("password", "password", "Password: ")
+                loginSection.input("password", "password", "Password: ")
                     .onchange(password => console.log("password value set to:", password));
                 const loginActions = loginSection.actions();
                 loginActions.action("Cancel")
@@ -45,7 +44,7 @@ Example using it in a webpage:
                 loginActions.action("Submit")
                     .onclick(() => { card.busy(); setTimeout(() => card.available(), 3000) });
                 loginActions.action("Show input map")
-                    .onclick(() => formGroup.withValueMap(valueMap => console.log(valueMap)));
+                    .onclick(() => loginSection.withValueMap(valueMap => console.log(valueMap)));
             };
         </script>
     </head>
@@ -69,6 +68,8 @@ Example using it in a webpage:
         - `[error functions]`
         - `busy()`: show busy animation to freeze the interface on the section only while awaiting the result of an async operation
         - `available()`: hide busy animation upon termination of an async operation
+        - `[error functions]`
+        - `withValues()`: execute `fn` with the group value map
         - `input(inputType, prompt)`: add a text input field of `inputType` (`text`,`password`, `date` etc.) with an associated label containing `prompt` text. *Note: to use a textarea instead of a standard text input, set type to `multiline`.
             - `[error functions]`
             - `onchange(fn)`: execute `fn` with the input field value upon change
@@ -81,9 +82,6 @@ Example using it in a webpage:
             - `[error functions]`
             - `onchange()`: execute `fn` with the chosen field values upon change
             - `withValue(fn)`: execute `fn` with the chosen values
-        - `formGroup()`: 
-            - `[error functions]`
-            - `withValues()`: execute `fn` with the group value map
         - `text(text)`: add an information text box
         - `table(headers)`: add a data table, initialized with the `headers` array of table headers
             - `addRow(data)`: add `data` containing an array of values, as a row

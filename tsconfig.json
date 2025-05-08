@@ -13,7 +13,6 @@
     "outDir": "dist",
     "strict": true,
     "declaration": true,
-    "emitDeclarationOnly": true
   },
   "include": [
     "src"
