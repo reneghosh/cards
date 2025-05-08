@@ -1,8 +1,7 @@
 {
   "name": "cards",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A helper library to add simple form-based interactions to websites",
   "scripts": {
     "compile": "tsc src/**/*.ts"
   },
