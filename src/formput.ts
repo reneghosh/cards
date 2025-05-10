@@ -256,6 +256,7 @@ export const buildText = (
   return text;
 };
 
+/* build an error field */
 export const buildError = (container: HTMLElement) => {
   const errorContainer = createSubElementWithClass(
     container,
@@ -300,6 +301,7 @@ export const buildError = (container: HTMLElement) => {
   return error;
 };
 
+/* build a text input */
 export const buildInput = (
   container: HTMLElement,
   type: string,
@@ -363,6 +365,7 @@ export const buildInput = (
   return input;
 };
 
+/* build a selection input */
 export const buildSelect = (
   container: HTMLElement,
   values: { [key: string]: any }[],
@@ -429,6 +432,8 @@ export const buildSelect = (
   };
   return select;
 };
+
+/* build a choices input */
 export const buildChoices = (
   container: HTMLElement,
   values: { [key: string]: string }[],
@@ -525,6 +530,7 @@ export const buildChoices = (
   return choices;
 };
 
+/* build a section */
 export const buildSection = (
   container: HTMLElement,
   title?: string,
@@ -633,6 +639,8 @@ export const buildSection = (
   };
   return section as Section;
 };
+
+/* build a formput */
 export const buildFormput = (containerId: any): Formput => {
   const container = document.getElementById(containerId);
   if (!container) {
@@ -712,6 +720,7 @@ export const buildFormput = (containerId: any): Formput => {
   return formput;
 };
 
+/* build a formput anchored to an html element identified by containerId */
 export const formput = (containerId: string): Formput => {
   const container = document.getElementById(containerId);
   if (container) {
