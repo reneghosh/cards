@@ -11,7 +11,10 @@ import {
   Text,
 } from "./types";
 
+//browser document variable
 declare const document: Document;
+
+/* look up base classes in a mapping and replace it with its corresponding class(es)*/
 export const lookupClass = (...className: string[]): string => {
   let classNameList = [];
   if (cardStyleMapper) {
@@ -24,6 +27,7 @@ export const lookupClass = (...className: string[]): string => {
   return className.join("-");
 };
 
+/* create an html element by tag name and append it to a parent container */
 const createSubElement = (
   parentContainer: HTMLElement,
   tagName: string,
@@ -33,12 +37,13 @@ const createSubElement = (
   return container;
 };
 
+/* create an html eleemnt by tag name, with a given class name, and append it to a parent container */
 const createSubElementWithClass = (
   parentContainer: HTMLElement,
   tagName: string,
   className: string,
 ): HTMLElement => {
-  const container = document.createElement(tagName);
+  const container = createSubElement(parentContainer, tagName);
   if (className && className.length > 0) {
     for (let aClass of className.trim().split(" ")) {
       if (className.length > 0) {
@@ -46,10 +51,10 @@ const createSubElementWithClass = (
       }
     }
   }
-  parentContainer.appendChild(container);
   return container;
 };
 
+/* hide an element in the browser by adding a hidden class to its styles */
 const hideElement = (element: HTMLElement) => {
   const cardShownClass = lookupClass("card-shown");
   const cardHiddenClass = lookupClass("card-hidden");
@@ -61,6 +66,7 @@ const hideElement = (element: HTMLElement) => {
   }
 };
 
+/* ensure an element is shown by removing any hidden elements from its styles */
 const showElement = (element: HTMLElement) => {
   const cardShownClass = lookupClass("card-shown");
   const cardHiddenClass = lookupClass("card-hidden");
@@ -72,6 +78,7 @@ const showElement = (element: HTMLElement) => {
   }
 };
 
+/* create a modal busy indicator */
 const createBusyLoader = (container: HTMLElement) => {
   const busyLoaderContainer = createSubElementWithClass(
     container,
@@ -90,10 +97,12 @@ const createBusyLoader = (container: HTMLElement) => {
 };
 let cardStyleMapper: { [key: string]: string };
 
+/* map default styles to overloads, for theming purposes */
 export const setStyleMapping = (mapper: { [key: string]: string }) => {
   cardStyleMapper = mapper;
 };
 
+/* build an action button to add to an action list on a card section (or to the card anonymous section)*/
 export const buildAction = (
   container: HTMLElement,
   text: string,
@@ -123,6 +132,7 @@ export const buildAction = (
   return action;
 };
 
+/* build a table component with given headers */
 export const buildTable = (
   container: HTMLElement,
   headers: string[],
@@ -196,6 +206,7 @@ export const buildTable = (
   return table;
 };
 
+/* build an action list for a section (or card default anonymous section) */
 export const buildActionsList = (container: HTMLElement): ActionsList => {
   const actionListContainer = createSubElementWithClass(
     container,
@@ -217,6 +228,7 @@ export const buildActionsList = (container: HTMLElement): ActionsList => {
   return actionsList;
 };
 
+/* build a text message component */
 export const buildText = (
   container: HTMLElement,
   textMessage: string,
@@ -611,6 +623,11 @@ export const buildSection = (
       });
       showElement(sectionContainer);
       return aChoice;
+    },
+    text: (text: string) => {
+      const aText = buildText(sectionContainer, text);
+      showElement(sectionContainer);
+      return aText;
     },
     ...errors,
   };

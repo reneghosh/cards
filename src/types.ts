@@ -8,6 +8,7 @@ export interface SectionFormElements {
   choice: ChoiceFunction;
   select: SelectFunction;
   input: InputFunction;
+  text: TextFunction;
 }
 export interface Section extends Errors, SectionFormElements {
   show: ShowFunction<Section>;
@@ -85,6 +86,9 @@ export interface ShowAllSectionsFunction<Type> {
 }
 export interface InputFunction {
   (key: string, type: string, prompt: string): Input;
+}
+export interface TextFunction {
+  (text: string): Text;
 }
 export interface SelectFunction {
   (key: string, values: { [key: string]: any }[], prompt: string): Select;

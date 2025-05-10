@@ -12,6 +12,9 @@ const init = (containerId: string) => {
     .onChange((value: string) =>
       console.log("save credentials set to:", value),
     );
+  mainCard.text(
+    "hello, there! It seems you are trying out the cards library. \n If you like, check out the documentation, there are a good number of things there that you might like.",
+  );
   loginSection
     .input("login", "text", "Login: ")
     .onChange((login: string) => console.log("login value set to:", login));
