@@ -238,14 +238,14 @@ export const buildText = (
     "div",
     lookupClass("card-text"),
   );
-  textContainer.innerText = textMessage;
+  textContainer.innerHTML = textMessage;
   const text: Text = {
     show: () => {
       showElement(textContainer);
       return text;
     },
     setText: (textText: string) => {
-      textContainer.innerText = textText;
+      textContainer.innerHTML = textText;
       return text;
     },
     hide: () => {
