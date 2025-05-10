@@ -1,5 +1,5 @@
 {
-  "name": "cards",
+  "name": "formput",
   "version": "1.0.0",
   "type": "module",
   "description": "A helper library to add simple form-based interactions to websites",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/satelliteray/cards.git"
+    "url": "git+https://github.com/reneghosh/formput.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/satelliteray/cards/issues"
+    "url": "https://github.com/reneghosh/formput/issues"
   },
-  "homepage": "https://github.com/satelliteray/cards#readme",
+  "homepage": "https://github.com/reneghosh/formput#readme",
   "devDependencies": {
     "@types/node": "^22.14.1",
     "nodemon": "^3.1.10",

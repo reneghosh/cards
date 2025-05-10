@@ -31,50 +31,50 @@ fieldset {
   margin: 0;
 }
 
-.card-choices {
+.formput-choices {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
 }
 
-.card-selection {
+.formput-selection {
   padding: 0.5em;
   border-radius: 0.4em;
   background-color: #eee;
 }
 
-.card {
+.formput {
   flex: 0 1 40em;
   box-shadow: 0.05em 0.05em 0.2em #000;
   background-color: #abc;
 }
 
-.card-shown {
+.formput-shown {
   display: flex;
   flex-direction: column;
 }
 
-.card-hidden {
+.formput-hidden {
   display: none;
 }
 
-.card-header {
+.formput-header {
   padding: 0.5em;
   color: #445;
 }
 
-.card-section-header {
+.formput-section-header {
   color: #445;
   margin: 0;
   padding: 0;
 }
 
-.card-section-header-title {
+.formput-section-header-title {
   font-weight: bold;
   font-size: 120%;
 }
 
-.card-errors {
+.formput-errors {
   background: #dcc;
   margin-top: 0.4em;
   margin-bottom: 0.4em;
@@ -83,88 +83,88 @@ fieldset {
   padding: 0.5em;
 }
 
-.card-error {
+.formput-error {
   color: #F44;
 }
 
-.card-header h1,
-.card-header h2 {
+.formput-header h1,
+.formput-header h2 {
   text-align: center;
   text-shadow: 0.02em 0.02em 0.04em #579;
   font-weight: 400;
   margin: 0.1em;
 }
 
-.card-header h1 {
+.formput-header h1 {
   font-size: 160%;
 }
 
-.card-header h2 {
+.formput-header h2 {
   font-size: 140%;
 }
 
-.card-body {
+.formput-body {
   margin: 0;
   padding: 0;
 }
 
 
-.card-section-text {
+.formput-section-text {
   padding: 0.5em;
   color: #224;
 }
 
-.card-section {
+.formput-section {
   padding: 0.5em;
   background-color: #9AB;
   border-top: 1px #ddd solid;
 }
 
-.card-section:first-child {
+.formput-section:first-child {
   border-top: none;
 }
 
-.card-item {
+.formput-item {
   display: flex;
   flex-direction: column;
   justify-content: start;
   margin-bottom: 0.2em;
 }
 
-.card-prompt {
+.formput-prompt {
   padding: 0.3em;
   padding-bottom: 0.3em;
 }
 
-.card-input {
+.formput-input {
   padding: 0.3em;
   display: flex;
   border: none;
   flex-direction: column;
 }
 
-.card-input-checkbox {
+.formput-input-checkbox {
   margin: 0.5em;
   height: 1em;
 }
 
-.card-text {
+.formput-text {
   background-color: #ABC;
   padding: 0.5em;
   border: none;
 }
 
-.card-input:focus,
-.card-text:focus,
-.card-input-checkbox:focus,
-.card-selection:focus,
+.formput-input:focus,
+.formput-text:focus,
+.formput-input-checkbox:focus,
+.formput-selection:focus,
 button:focus,
-.card-table-row:focus {
+.formput-table-row:focus {
   outline: 2px dashed #445;
   outline-offset: 0.2em;
 }
 
-.card-action-list {
+.formput-action-list {
   padding: 0.3em;
   padding-top: 0.7em;
   padding-bottom: 0.7em;
@@ -175,7 +175,7 @@ button:focus,
   overflow-x: auto;
 }
 
-.card-table {
+.formput-table {
   padding: 0em;
   border-spacing: 0px;
   border: none;
@@ -184,25 +184,25 @@ button:focus,
   overflow-x: scroll;
 }
 
-.card-table thead th,
-.card-table tbody td {
+.formput-table thead th,
+.formput-table tbody td {
   /* border: 1px solid #999; */
   padding: 0.3em;
   border-collapse: collapse;
 }
 
-.card-table thead tr th {
+.formput-table thead tr th {
   background-color: #ccc;
   text-align: center;
   font-weight: bold;
   font-size: 90%;
 }
 
-.card-table tbody tr {
+.formput-table tbody tr {
   background-color: #eee;
 }
 
-.card-button {
+.formput-button {
   background-color: #568;
   color: #eee;
   padding: 0.5em;
@@ -215,7 +215,7 @@ button:focus,
   white-space: nowrap;
 }
 
-.card-modal {
+.formput-modal {
   position: absolute;
   background-color: #000;
   opacity: 0.7;
@@ -230,7 +230,7 @@ button:focus,
   align-items: center;
 }
 
-.card-busy {
+.formput-busy {
   color: #ccc;
   opacity: 1;
   display: flex;
@@ -241,37 +241,37 @@ button:focus,
   height: 100%;
 }
 
-.card-loader {
+.formput-loader {
   border: 3px solid #BA8;
   display: flex;
   flex-direction: column;
 }
 
-.card-loader div {
+.formput-loader div {
   border: 3px solid #BA8;
   height: 1em;
   width: 3em;
   margin: 0.4em;
-  animation: card-loader 1s linear infinite;
+  animation: formput-loader 1s linear infinite;
 }
 
-.card-loader div:nth-child(1) {
+.formput-loader div:nth-child(1) {
   animation-delay: -0.5s;
 }
 
-.card-loader div:nth-child(2) {
+.formput-loader div:nth-child(2) {
   animation-delay: -1.0s;
 }
 
-.card-loader div:nth-child(3) {
+.formput-loader div:nth-child(3) {
   animation-delay: -1.5s;
 }
 
-.card-loader div:nth-child(3) {
+.formput-loader div:nth-child(3) {
   animation-delay: -0.5s;
 }
 
-@keyframes card-loader {
+@keyframes formput-loader {
   0% {
     flex: 0 0 .5em;
   }

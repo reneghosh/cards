@@ -1,7 +1,7 @@
 import {
   Action,
   ActionsList,
-  Card,
+  Formput,
   Choice,
   Input,
   Section,
@@ -17,8 +17,8 @@ declare const document: Document;
 /* look up base classes in a mapping and replace it with its corresponding class(es)*/
 export const lookupClass = (...className: string[]): string => {
   let classNameList = [];
-  if (cardStyleMapper) {
-    const mappedStyle = cardStyleMapper[className.join("-")];
+  if (formputStyleMapper) {
+    const mappedStyle = formputStyleMapper[className.join("-")];
     if (mappedStyle) {
       classNameList.push(mappedStyle);
     }
@@ -56,25 +56,25 @@ const createSubElementWithClass = (
 
 /* hide an element in the browser by adding a hidden class to its styles */
 const hideElement = (element: HTMLElement) => {
-  const cardShownClass = lookupClass("card-shown");
-  const cardHiddenClass = lookupClass("card-hidden");
-  if (cardShownClass && cardShownClass.length > 0) {
-    element.classList.remove(cardShownClass);
+  const formputShownClass = lookupClass("formput-shown");
+  const formputHiddenClass = lookupClass("formput-hidden");
+  if (formputShownClass && formputShownClass.length > 0) {
+    element.classList.remove(formputShownClass);
   }
-  if (cardHiddenClass) {
-    element.classList.add(cardHiddenClass);
+  if (formputHiddenClass) {
+    element.classList.add(formputHiddenClass);
   }
 };
 
 /* ensure an element is shown by removing any hidden elements from its styles */
 const showElement = (element: HTMLElement) => {
-  const cardShownClass = lookupClass("card-shown");
-  const cardHiddenClass = lookupClass("card-hidden");
-  if (cardShownClass) {
-    element.classList.add(cardShownClass);
+  const formputShownClass = lookupClass("formput-shown");
+  const formputHiddenClass = lookupClass("formput-hidden");
+  if (formputShownClass) {
+    element.classList.add(formputShownClass);
   }
-  if (cardHiddenClass) {
-    element.classList.remove(cardHiddenClass);
+  if (formputHiddenClass) {
+    element.classList.remove(formputHiddenClass);
   }
 };
 
@@ -83,26 +83,26 @@ const createBusyLoader = (container: HTMLElement) => {
   const busyLoaderContainer = createSubElementWithClass(
     container,
     "div",
-    lookupClass("card-modal"),
+    lookupClass("formput-modal"),
   );
   busyLoaderContainer.style.display = "none";
   const loader = createSubElementWithClass(
     busyLoaderContainer,
     "div",
-    lookupClass("card-loader"),
+    lookupClass("formput-loader"),
   );
   container.style.position = "relative";
   loader.innerHTML = "<div></div><div></div><div></div><div></div>";
   return busyLoaderContainer;
 };
-let cardStyleMapper: { [key: string]: string };
+let formputStyleMapper: { [key: string]: string };
 
 /* map default styles to overloads, for theming purposes */
 export const setStyleMapping = (mapper: { [key: string]: string }) => {
-  cardStyleMapper = mapper;
+  formputStyleMapper = mapper;
 };
 
-/* build an action button to add to an action list on a card section (or to the card anonymous section)*/
+/* build an action button to add to an action list on a formput section (or to the formput anonymous section)*/
 export const buildAction = (
   container: HTMLElement,
   text: string,
@@ -111,7 +111,7 @@ export const buildAction = (
   const actionContainer = createSubElementWithClass(
     container,
     "button",
-    lookupClass("card-button"),
+    lookupClass("formput-button"),
   );
   actionContainer.innerText = text;
   const action: Action = {
@@ -140,7 +140,7 @@ export const buildTable = (
   const tableContainer = createSubElementWithClass(
     container,
     "table",
-    lookupClass("card-table"),
+    lookupClass("formput-table"),
   );
   const headerContainer = createSubElement(tableContainer, "thead");
   const bodyContainer = createSubElement(tableContainer, "tbody");
@@ -157,7 +157,7 @@ export const buildTable = (
       const rowContainer = createSubElementWithClass(
         bodyContainer,
         "tr",
-        lookupClass("card-table-row"),
+        lookupClass("formput-table-row"),
       );
       rowContainer.setAttribute("tabindex", "1");
       for (let value of values) {
@@ -206,12 +206,12 @@ export const buildTable = (
   return table;
 };
 
-/* build an action list for a section (or card default anonymous section) */
+/* build an action list for a section (or formput default anonymous section) */
 export const buildActionsList = (container: HTMLElement): ActionsList => {
   const actionListContainer = createSubElementWithClass(
     container,
     "div",
-    lookupClass("card-action-list"),
+    lookupClass("formput-action-list"),
   );
   // const action = buildAction(container);
   const actionsList = {
@@ -236,7 +236,7 @@ export const buildText = (
   const textContainer = createSubElementWithClass(
     container,
     "div",
-    lookupClass("card-text"),
+    lookupClass("formput-text"),
   );
   textContainer.innerHTML = textMessage;
   const text: Text = {
@@ -260,7 +260,7 @@ export const buildError = (container: HTMLElement) => {
   const errorContainer = createSubElementWithClass(
     container,
     "div",
-    lookupClass("card-errors"),
+    lookupClass("formput-errors"),
   );
   var hidden = true;
   hideElement(errorContainer);
@@ -269,7 +269,7 @@ export const buildError = (container: HTMLElement) => {
     const errorMessageElement: HTMLElement = createSubElementWithClass(
       errorContainer,
       "div",
-      lookupClass("card-error"),
+      lookupClass("formput-error"),
     );
     errorMessageElement.innerText = errorText;
     if (hidden) {
@@ -308,12 +308,12 @@ export const buildInput = (
   const itemContainer = createSubElementWithClass(
     container,
     "div",
-    lookupClass("card-item"),
+    lookupClass("formput-item"),
   );
   const promptContainer = createSubElementWithClass(
     itemContainer,
     "div",
-    lookupClass("card-prompt"),
+    lookupClass("formput-prompt"),
   );
   promptContainer.innerText = prompt;
   const errorMethods = buildError(container);
@@ -322,13 +322,13 @@ export const buildInput = (
     inputContainer = createSubElementWithClass(
       itemContainer,
       "textarea",
-      lookupClass("card-input"),
+      lookupClass("formput-input"),
     );
   } else {
     inputContainer = createSubElementWithClass(
       itemContainer,
       "input",
-      lookupClass("card-input"),
+      lookupClass("formput-input"),
     );
     inputContainer.setAttribute("type", type);
   }
@@ -371,24 +371,24 @@ export const buildSelect = (
   const itemContainer = createSubElementWithClass(
     container,
     "div",
-    lookupClass("card-item"),
+    lookupClass("formput-item"),
   );
   const promptContainer = createSubElementWithClass(
     itemContainer,
     "label",
-    lookupClass("card-prompt"),
+    lookupClass("formput-prompt"),
   );
   const selectionContainer = createSubElementWithClass(
     itemContainer,
     "div",
-    lookupClass("card-select-container"),
+    lookupClass("formput-select-container"),
   );
   promptContainer.innerText = prompt;
   const errorMethods = buildError(container);
   const selectElement = createSubElementWithClass(
     selectionContainer,
     "select",
-    lookupClass("card-selection"),
+    lookupClass("formput-selection"),
   ) as HTMLSelectElement;
   createSubElement(selectElement, "option");
   // optionContainer.innerText = prompt;
@@ -437,19 +437,19 @@ export const buildChoices = (
   const itemContainer = createSubElementWithClass(
     container,
     "div",
-    lookupClass("card-item"),
+    lookupClass("formput-item"),
   );
   const promptContainer = createSubElementWithClass(
     itemContainer,
     "div",
-    lookupClass("card-prompt"),
+    lookupClass("formput-prompt"),
   );
   promptContainer.innerText = prompt;
   const errors = buildError(container);
   const selectContainer = createSubElementWithClass(
     itemContainer,
     "div",
-    lookupClass("card-choices"),
+    lookupClass("formput-choices"),
   ) as HTMLSelectElement;
   let firstContainer: HTMLElement;
   let counter = 0;
@@ -459,12 +459,12 @@ export const buildChoices = (
       const optionContainer = createSubElementWithClass(
         selectContainer,
         "div",
-        lookupClass("card-choice"),
+        lookupClass("formput-choice"),
       );
       const checkBoxContainer = createSubElementWithClass(
         optionContainer,
         "input",
-        lookupClass("card-input-checkbox"),
+        lookupClass("formput-input-checkbox"),
       ) as HTMLInputElement;
       if (counter == 0) {
         firstContainer = checkBoxContainer;
@@ -483,7 +483,7 @@ export const buildChoices = (
       const textContainer = createSubElementWithClass(
         optionContainer,
         "label",
-        lookupClass("card-choice-label"),
+        lookupClass("formput-choice-label"),
       );
       textContainer.setAttribute("for", key);
       textContainer.innerText = value[key];
@@ -532,17 +532,17 @@ export const buildSection = (
   const sectionContainer = createSubElementWithClass(
     container,
     "div",
-    lookupClass("card-section"),
+    lookupClass("formput-section"),
   );
   const sectionHeaderContainer = createSubElementWithClass(
     sectionContainer,
     "h3",
-    lookupClass("card-section-header"),
+    lookupClass("formput-section-header"),
   );
   const actionsContainer = createSubElementWithClass(
     container,
     "div",
-    lookupClass("card-actions"),
+    lookupClass("formput-actions"),
   );
   hideElement(sectionHeaderContainer);
   hideElement(sectionContainer);
@@ -550,7 +550,7 @@ export const buildSection = (
     const sectionHeaderTitleContainer = createSubElementWithClass(
       sectionHeaderContainer,
       "div",
-      lookupClass("card-section-header-title"),
+      lookupClass("formput-section-header-title"),
     );
     sectionHeaderTitleContainer.innerText = title;
     showElement(sectionHeaderContainer);
@@ -633,55 +633,55 @@ export const buildSection = (
   };
   return section as Section;
 };
-export const buildCard = (containerId: any): Card => {
+export const buildFormput = (containerId: any): Formput => {
   const container = document.getElementById(containerId);
   if (!container) {
     throw `can't find element ${containerId}`;
   }
-  const cardContainer = createSubElementWithClass(
+  const formputContainer = createSubElementWithClass(
     container,
     "div",
-    lookupClass("card"),
+    lookupClass("formput"),
   );
   const bodyContainer = createSubElementWithClass(
-    cardContainer,
+    formputContainer,
     "div",
-    lookupClass("card-body"),
+    lookupClass("formput-body"),
   );
   const headerContainer = createSubElementWithClass(
     bodyContainer,
     "div",
-    lookupClass("card-header"),
+    lookupClass("formput-header"),
   );
   const titleContainer = createSubElementWithClass(
     headerContainer,
     "h1",
-    lookupClass("card-title"),
+    lookupClass("formput-title"),
   );
   const untitledSection = buildSection(bodyContainer);
   const sections: ShowHideable<Section>[] = [];
   const errorMethods = buildError(bodyContainer);
   hideElement(headerContainer);
   hideElement(titleContainer);
-  const busyContainer = createBusyLoader(cardContainer);
-  const card: Card = {
+  const busyContainer = createBusyLoader(formputContainer);
+  const formput: Formput = {
     title: (title: string) => {
       titleContainer.innerText = title;
       showElement(headerContainer);
       showElement(titleContainer);
-      return card;
+      return formput;
     },
     hideAllSections: () => {
       for (let section of sections) {
         section.hide();
       }
-      return card;
+      return formput;
     },
     showAllSections: () => {
       for (let section of sections) {
         section.show();
       }
-      return card;
+      return formput;
     },
     ...untitledSection,
     section: (title?: string) => {
@@ -690,33 +690,32 @@ export const buildCard = (containerId: any): Card => {
       return aSection;
     },
     show: () => {
-      showElement(cardContainer);
-      return card;
+      showElement(formputContainer);
+      return formput;
     },
     hide: () => {
-      hideElement(cardContainer);
-      return card;
+      hideElement(formputContainer);
+      return formput;
     },
     busy: () => {
       busyContainer.style.display = "flex";
       busyContainer.style.border = "1px solid red";
-      console.log(busyContainer);
-      return card;
+      return formput;
     },
     available: () => {
       busyContainer.style.display = "none";
-      return card;
+      return formput;
     },
     action: untitledSection.action,
     ...errorMethods,
   };
-  return card;
+  return formput;
 };
 
-export const card = (containerId: string): Card => {
+export const formput = (containerId: string): Formput => {
   const container = document.getElementById(containerId);
   if (container) {
-    return buildCard(containerId);
+    return buildFormput(containerId);
   } else {
     throw `can't find container ${containerId}`;
   }

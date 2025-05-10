@@ -1,12 +1,11 @@
 # FormPut
 
-A library for building simple card-based user interfaces in browser applications.
+FormPut is a typescript library for adding simple forme-based input maps to static websites.
 
 ## Motivation
 
-The fluidity and adaptability of the browser blurs the line between content sites and applications. A plethora of frameworks exist to build consistent, performant interfaces for applications, covering the widest range of visual and functional possibilities.
-
-This library aims for something simpler: allow ECMAScript developpers to build card-based interfaces through a simple API that uses function chaining to provide simple user interactions.
+For websites that are mostly content-based and only require small pockets of user interactivity, FormPut brings a fluent interface to
+allow for easily prompting the user for input data in a key-value map format.
 
 # Status
 
@@ -18,7 +17,7 @@ This project is very much in alpha stage at the moment, and the interface is sti
 
 ## Sample usage
 
-To begin building a card application, start from the HTML element with a unique id where you want to anchor the interface. Pass the id to the card builder, then chain API functions to build it.
+To begin building a formput page, start from the HTML element with a unique id where you want to anchor the interface. Pass the id to the formput builder, then chain API functions to build it.
 
 Example using it in a webpage:
 
@@ -30,10 +29,10 @@ Example using it in a webpage:
         <link rel="stylesheet" href="../style.css">
         <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
         <script type="module">
-            import { card } from "../cards.js";
+            import { formput } from "../formputs";
             window.onload = () => {
-                const mainCard = card("main").title("Card Example");
-                const loginSection = mainCard.section("Log in");
+                const mainFormput = formput("main").title("Formput Example");
+                const loginSection = mainFormput.section("Log in");
                 loginSection.input("login", "text", "Login: ")
                     .onchange(login => console.log("login value set to:", login));
                 loginSection.input("password", "password", "Password: ")
@@ -42,7 +41,7 @@ Example using it in a webpage:
                 loginActions.action("Cancel")
                     .onclick(() => loginSection.error("You don't seem to want to log in"));
                 loginActions.action("Submit")
-                    .onclick(() => { card.busy(); setTimeout(() => card.available(), 3000) });
+                    .onclick(() => { mainFormput.busy(); setTimeout(() => mainFormput.available(), 3000) });
                 loginActions.action("Show input map")
                     .onclick(() => loginSection.withValueMap(valueMap => console.log(valueMap)));
             };
@@ -58,11 +57,11 @@ Example using it in a webpage:
 
 **Item functions:**
 
-- `card(containerId)`: create a card anchored to HTML element of given id
-    - `title(text)`: set the card title to `text`
-    - `busy()`: show busy animation to freeze the interface on the entire card while awaiting the result of an async operation
+- `formput(containerId)`: create a formput anchored to HTML element of given id
+    - `title(text)`: set the formput title to `text`
+    - `busy()`: show busy animation to freeze the interface on the entire formput while awaiting the result of an async operation
     - `available()`: hide busy animation upon termination of an async operation
-    - `hideAllSections()`: hide all sections that are registered on the card
+    - `hideAllSections()`: hide all sections that are registered on the formput
     - `[error functions]`
     - `section(title)`: add section with optional `title` text.
         - `[error functions]`
@@ -106,65 +105,65 @@ The list of styles that can be overload is as follows:
 
 |     Class name             |                 Where it goes                   |
 | ---------------------------| ------------------------------------------------|
-| card                       | The main enclosing container. Use this for overall card looks |
-| card-body                  | A container for the card body. Use this for the layout of card sections |
-| card-header                | The card header container, which holds the title |
-| card-sections              | A container off off card-body with one child per card section |
-| card-title                 | Styling for the card title |
-| card-errors                | Container for a list of errors, present at card, section and input level |
-| card-error                 | A card error, set within the error container, present at card, section and input level |
-| card-section               | Container for sections, each of which has its onw inputs and action lists |
-| card-section-header        | The container for section title |
-| card-section-header-title  | Styling for the section title |
-| card-table                 | Styling for tables |
-| card-table-row             | Styling for each row of a table |
-| card-text                  | Styling for text information boxes |
-| card-input                 | Styling for input fields |
-| card-item                  | Styling for each item of a section, an item containing either input containers or action containers |
-| card-hidden                | Styling for a hidden section or item |
-| card-shown                 | Styling for a shown section or item |
-| card-prompt                | Container for an input's prompt |
-| card-selection             | Container for a selection |
-| card-choices               | Container for a list of choice checkboxes |
-| card-choice                | Container for a checkbox and label |
-| card-input-checkbox        | Styling for a checkbox |
-| card-choice-label          | Styling for a checkbox label |
-| card-action-list           | Container for a list of actions |
-| card-button                | Styling for an action |
+| formput                       | The main enclosing container. Use this for overall formput looks |
+| formput-body                  | A container for the formput body. Use this for the layout of formput sections |
+| formput-header                | The formput header container, which holds the title |
+| formput-sections              | A container off off formput-body with one child per formput section |
+| formput-title                 | Styling for the formput title |
+| formput-errors                | Container for a list of errors, present at formput, section and input level |
+| formput-error                 | A formput error, set within the error container, present at formput, section and input level |
+| formput-section               | Container for sections, each of which has its onw inputs and action lists |
+| formput-section-header        | The container for section title |
+| formput-section-header-title  | Styling for the section title |
+| formput-table                 | Styling for tables |
+| formput-table-row             | Styling for each row of a table |
+| formput-text                  | Styling for text information boxes |
+| formput-input                 | Styling for input fields |
+| formput-item                  | Styling for each item of a section, an item containing either input containers or action containers |
+| formput-hidden                | Styling for a hidden section or item |
+| formput-shown                 | Styling for a shown section or item |
+| formput-prompt                | Container for an input's prompt |
+| formput-selection             | Container for a selection |
+| formput-choices               | Container for a list of choice checkboxes |
+| formput-choice                | Container for a checkbox and label |
+| formput-input-checkbox        | Styling for a checkbox |
+| formput-choice-label          | Styling for a checkbox label |
+| formput-action-list           | Container for a list of actions |
+| formput-button                | Styling for an action |
 
 
 ### Example styling with Bootstrap:
 
 ```javascript
-import { setStyleMapping, card } from "../cards.js";
+import { setStyleMapping, formut } from "../formput";
 setStyleMapping({
-    "card": "flex-column border-bottom",
-    "card-body": "",
-    "card-header": "",
-    "card-sections": "flex-column",
-    "card-title": "text-center",
-    "card-errors": "bg-danger bd-gradient",
-    "card-error": "text-white",
-    "card-section": "border-top",
-    "card-section-header": "bg-light",
-    "card-section-header-title": "",
-    "card-table": "table table-striped",
-    "card-table-row": "",
-    "card-text": "lead",
-    "card-input": "form-control",
-    "card-item": "flex-row",
-    "card-hidden": "d-none",
-    "card-shown": "d-flex-column",
-    "card-prompt": "form-check-label",
-    "card-selection": "form-select",
-    "card-choices": "d-flex-row",
-    "card-choice": "form-check form-check-inline",
-    "card-input-checkbox": "form-check-input",
-    "card-choice-label": "form-check-label",
-    "card-action-list": "flex-row justify-content-center m-2",
-    "card-button": "btn btn-dark m-1",
+    "formput": "flex-column border-bottom",
+    "formput-body": "",
+    "formput-header": "",
+    "formput-sections": "flex-column",
+    "formput-title": "text-center",
+    "formput-errors": "bg-danger bd-gradient",
+    "formput-error": "text-white",
+    "formput-section": "border-top",
+    "formput-section-header": "bg-light",
+    "formput-section-header-title": "",
+    "formput-table": "table table-striped",
+    "formput-table-row": "",
+    "formput-text": "lead",
+    "formput-input": "form-control",
+    "formput-item": "flex-row",
+    "formput-hidden": "d-none",
+    "formput-shown": "d-flex-column",
+    "formput-prompt": "form-check-label",
+    "formput-selection": "form-select",
+    "formput-choices": "d-flex-row",
+    "formput-choice": "form-check form-check-inline",
+    "formput-input-checkbox": "form-check-input",
+    "formput-choice-label": "form-check-label",
+    "formput-action-list": "flex-row justify-content-center m-2",
+    "formput-button": "btn btn-dark m-1",
 });
-const mainCard = card("main").title("Card Example");
+const mainFormput = formput("main").title("Formput Example");
 //...
 ```
 

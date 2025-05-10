@@ -68,13 +68,13 @@ export interface Select extends Errors {
   withValue: WithValueFunction<Select>;
   onChange: OnChangeFunction;
 }
-export interface Card
-  extends ShowHideable<Card>,
-    Busyable<Card>,
+export interface Formput
+  extends ShowHideable<Formput>,
+    Busyable<Formput>,
     SectionFormElements {
-  title: TitleFunction<Card>;
-  hideAllSections: HideAllSectionsFunction<Card>;
-  showAllSections: ShowAllSectionsFunction<Card>;
+  title: TitleFunction<Formput>;
+  hideAllSections: HideAllSectionsFunction<Formput>;
+  showAllSections: ShowAllSectionsFunction<Formput>;
   section: MakeSectionFunction;
   action: ActionFunction;
 }
