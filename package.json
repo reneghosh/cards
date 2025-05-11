@@ -1,6 +1,6 @@
 {
   "name": "formput",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "type": "module",
   "description": "A helper library to add simple form-based interactions to websites",
   "scripts": {
@@ -10,6 +10,11 @@
     "type": "git",
     "url": "git+https://github.com/reneghosh/formput.git"
   },
+  "main": "src/formput.ts",
+  "types": "src/types.ts",
+  "files": [
+    "dist/*"
+  ],
   "author": "",
   "license": "ISC",
   "bugs": {

@@ -13,7 +13,7 @@ This project is very much in alpha stage at the moment, and the interface is sti
 
 ## Installation
 
-Formput can be installed directly into your project through cdn: `https://cdn.jsdelivr.net/gh/reneghosh/formput@main/README.md`
+Formput can be installed directly into your project through cdn: `https://cdn.jsdelivr.net/gh/reneghosh/formput@main/src/formput.ts`
 
 
 ## Example usage
