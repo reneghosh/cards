@@ -10,10 +10,11 @@
     "type": "git",
     "url": "git+https://github.com/reneghosh/formput.git"
   },
-  "main": "src/formput.ts",
-  "types": "src/types.ts",
+  "main": "dist/formput.js",
+  "types": "dist/formput.d.ts",
   "files": [
-    "dist/*"
+    "dist/*",
+    "css/*"
   ],
   "author": "",
   "license": "ISC",
