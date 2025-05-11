@@ -1,6 +1,6 @@
 {
   "name": "formput",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "description": "A helper library to add simple form-based interactions to websites",
   "scripts": {
@@ -14,7 +14,8 @@
   "types": "dist/formput.d.ts",
   "files": [
     "dist/*",
-    "css/*"
+    "css/*",
+    "src/*"
   ],
   "author": "",
   "license": "ISC",
