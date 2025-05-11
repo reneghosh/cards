@@ -1,11 +1,11 @@
-# FormPut
+# Formput
 
 FormPut is a typescript library for adding simple forme-based input maps to static websites.
 
-## Motivation
+## When to use it
 
-For websites that are mostly content-based and only require small pockets of user interactivity, FormPut brings a fluent interface to
-allow for easily prompting the user for input data in a key-value map format.
+For websites that are mostly content-based and only require small pockets of user interactivity, Forput provides a fluent interface that
+allows for easily embedding simple form prompts to gather user input data in a key-value map format.
 
 # Status
 
@@ -13,9 +13,10 @@ This project is very much in alpha stage at the moment, and the interface is sti
 
 ## Installation
 
-*TBD node and release file installation guide*
+Formput can be installed directly into your project through cdn: `https://cdn.jsdelivr.net/gh/reneghosh/formput@main/README.md`
 
-## Sample usage
+
+## Example usage
 
 To begin building a formput page, start from the HTML element with a unique id where you want to anchor the interface. Pass the id to the formput builder, then chain API functions to build it.
 
