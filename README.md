@@ -67,8 +67,8 @@ window.onload = () => {
 
 **Item functions:**
 
-- `formput(containerId)`: create a formput anchored to HTML element of given id
-    - `title(text)`: set the formput title to `text`
+- `formput(containerId: string)`: create a formput anchored to HTML element of given id
+    - `title(text: string)`: set the formput title to `text`
     - `busy()`: show busy animation to freeze the interface on the entire formput while awaiting the result of an async operation
     - `available()`: hide busy animation upon termination of an async operation
     - `hideAllSections()`: hide all sections that are registered on the formput
@@ -78,20 +78,20 @@ window.onload = () => {
         - `busy()`: show busy animation to freeze the interface on the section only while awaiting the result of an async operation
         - `available()`: hide busy animation upon termination of an async operation
         - `[error functions]`
-        - `withValues()`: execute `fn` with the group value map
+        - `withValues(fn: Function)`: execute `fn` with the group value map
         - `input(inputType, prompt)`: add a text input field of `inputType` (`text`,`password`, `date` etc.) with an associated label containing `prompt` text. *Note: to use a textarea instead of a standard text input, set type to `multiline`.
             - `[error functions]`
             - `onchange(fn)`: execute `fn` with the input field value upon change
             - `withValue()`: execute `fn` with input field value
         - `select()`: 
             - `[error functions]`
-            - `onchange()`: execute `fn` with the selected value upon change
-            - `withValue()`: execute `fn` with the selected value
+            - `onchange(fn: Function)`: execute `fn` with the selected value upon change
+            - `withValue(fn: Function)`: execute `fn` with the selected value
         - `choice()`: 
             - `[error functions]`
             - `onchange()`: execute `fn` with the chosen field values upon change
-            - `withValue(fn)`: execute `fn` with the chosen values
-        - `text(text)`: add an information text box
+            - `withValue(fn: Function)`: execute `fn` with the chosen values
+        - `text(text: string)`: add an information text box
         - `table(headers)`: add a data table, initialized with the `headers` array of table headers
             - `addRow(data)`: add `data` containing an array of values, as a row
             - `clearAllRows()`: remove all data rows
@@ -101,8 +101,8 @@ window.onload = () => {
 
 **Error functions:**
 
-- `addError(text)`: add `text` to list of errors
-- `error(text)`: set the sole error to `text`
+- `addError(text: string)`: add `text` to list of errors
+- `error(text: string)`: set the sole error to `text`
 - `clearErrors()`: clear all errors from the display
 
 ## Theming
