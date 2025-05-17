@@ -1,6 +1,6 @@
 # Formput
 
-FormPut is a typescript library for adding simple forme-based input maps to static websites.
+Forput is a typescript library for adding simple forme-based input maps to static websites.
 
 ## When to use it
 
